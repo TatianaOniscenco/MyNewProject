@@ -44,6 +44,7 @@ public class TestExample {
     }
 
     @Test
+    @DisplayName("Login User with correct email and password")
     void loginUserWithIncorrectEmailAndPassword(){
         page.navigate("https://www.automationexercise.com");
         page.locator("text= Signup / Login").click();
@@ -58,6 +59,7 @@ public class TestExample {
     }
 
     @Test
+    @DisplayName("Register User")
     void registerUser(){
 
         String firstName = faker.name().firstName();
