@@ -89,6 +89,7 @@
                     <useUnlimitedThreads>true</useUnlimitedThreads>
                 </configuration>
             </plugin>
+
         </plugins>
     </build>
 
