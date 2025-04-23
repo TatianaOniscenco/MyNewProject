@@ -1,42 +1,33 @@
 package steps;
 
-import com.microsoft.playwright.*;
+import com.microsoft.playwright.Page;
+import hooks.Hooks;
 import io.cucumber.java.en.*;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LoginSteps {
-    Playwright playwright;
-    Browser browser;
-    BrowserContext context;
-    Page page;
+    Page page = Hooks.getPage(); // ✅ Use shared page set by Hooks
 
-    @Given("I am on the login page")
-    public void i_am_on_the_login_page() {
-        playwright = Playwright.create();
-        browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
-        context = browser.newContext();
-        page = context.newPage();
+    @Given("User is on the login page")
+    public void user_is_on_login_page() {
         page.navigate("https://www.automationexercise.com");
+        page.waitForLoadState(); // ⏳ Wait for full load
         page.locator("text= Signup / Login").click();
+        page.waitForSelector("[data-qa='login-email']"); // ✅ Wait for login field
     }
 
-    @When("I enter incorrect credentials")
-    public void i_enter_incorrect_credentials() {
-        page.getByTestId("login-email").fill("wronguser@example.com");
-        page.getByTestId("login-password").fill("wrongpassword");
+    @When("User enters incorrect credentials")
+    public void user_enters_incorrect_credentials() {
+        page.getByTestId("login-email").fill("newuser@mail.com");
+        page.getByTestId("login-password").fill("12345");
     }
 
-    @And("I submit the login form")
-    public void i_submit_the_login_form() {
+    @And("User submits the login form")
+    public void user_submits_the_login_form() {
         page.getByTestId("login-button").click();
     }
 
-    @Then("I should see the {string} message")
-    public void i_should_see_the_message(String message) {
-        assertTrue(page.locator("text=" + message).isVisible());
-        context.close();
-        browser.close();
-        playwright.close();
-    }
 }
+
+

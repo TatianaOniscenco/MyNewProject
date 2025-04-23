@@ -1,6 +1,7 @@
 package steps;
 
-import com.microsoft.playwright.*;
+import com.microsoft.playwright.Page;
+import hooks.Hooks;
 import io.cucumber.java.en.*;
 import net.datafaker.Faker;
 
@@ -10,24 +11,19 @@ import java.util.Random;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RegisterSteps {
-    Playwright playwright;
-    Browser browser;
-    BrowserContext context;
-    Page page;
+    Page page = Hooks.getPage(); // ✅ Use the one set in @Before
     Faker faker = new Faker();
 
-    @Given("I am on the signup page")
-    public void i_am_on_the_signup_page() {
-        playwright = Playwright.create();
-        browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
-        context = browser.newContext();
-        page = context.newPage();
+    @Given("User is on the signup page")
+    public void user_is_on_the_signup_page() {
         page.navigate("https://www.automationexercise.com");
+        page.waitForLoadState(); // ✅ wait until full load
         page.locator("text= Signup / Login").click();
+        page.waitForSelector("[data-qa='signup-name']"); // ✅ wait until field is ready
     }
 
-    @When("I enter valid user information")
-    public void i_enter_valid_user_information() {
+    @When("User enters valid user information")
+    public void user_enters_valid_user_information() {
         page.getByTestId("signup-name").fill(faker.name().fullName());
         page.getByTestId("signup-email").fill(faker.internet().emailAddress());
         page.getByTestId("signup-button").click();
@@ -48,16 +44,8 @@ public class RegisterSteps {
         page.getByTestId("mobile_number").fill(faker.phoneNumber().phoneNumber());
     }
 
-    @And("I submit the registration form")
-    public void i_submit_the_registration_form() {
+    @And("User submits the registration form")
+    public void user_submits_the_registration_form() {
         page.getByTestId("create-account").click();
-    }
-
-    @Then("I should see the {string} message")
-    public void i_should_see_the_message(String message) {
-        assertTrue(page.locator("text=" + message).isVisible());
-        context.close();
-        browser.close();
-        playwright.close();
     }
 }

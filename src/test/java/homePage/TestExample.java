@@ -44,7 +44,7 @@ public class TestExample {
     }
 
     @Test
-    @DisplayName("Login User with correct email and password")
+    @DisplayName("Login User with incorrect email and password")
     void loginUserWithIncorrectEmailAndPassword(){
         page.navigate("https://www.automationexercise.com");
         page.locator("text= Signup / Login").click();
