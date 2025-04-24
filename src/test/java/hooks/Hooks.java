@@ -35,16 +35,7 @@ public class Hooks {
     }
 
     @After
-    public void afterScenario() {
-        if (context != null) {
-            context.close();
-        }
-    }
 
-    // Getters to access shared Page instance from step files
-    public static Page getPage() {
-        return page;
-    }
     public void afterScenario(Scenario scenario) {
         if (scenario.isFailed()) {
             Hooks.page.screenshot(new Page.ScreenshotOptions()
@@ -55,5 +46,13 @@ public class Hooks {
         if (Hooks.context != null) {
             Hooks.context.close();
         }
+        if (context != null) {
+            context.close();
+        }
+
+    }
+    // Getters to access shared Page instance from step files
+    public static Page getPage() {
+        return page;
     }
 }
