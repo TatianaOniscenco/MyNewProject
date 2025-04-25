@@ -4,8 +4,6 @@ import com.microsoft.playwright.Page;
 import hooks.Hooks;
 import io.cucumber.java.en.*;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 public class LoginSteps {
     Page page = Hooks.getPage(); // ✅ Use shared page set by Hooks
 
@@ -17,10 +15,10 @@ public class LoginSteps {
         page.waitForSelector("[data-qa='login-email']"); // ✅ Wait for login field
     }
 
-    @When("User enters incorrect credentials")
-    public void user_enters_incorrect_credentials() {
-        page.getByTestId("login-email").fill("newuser@mail.com");
-        page.getByTestId("login-password").fill("12345");
+    @When("User enters invalid {string} and {string} credentials")
+    public void user_enters_incorrect_credentials(String login, String password) {
+        page.getByTestId("login-email").fill(login);
+        page.getByTestId("login-password").fill(password);
     }
 
     @And("User submits the login form")
