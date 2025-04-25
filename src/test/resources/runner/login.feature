@@ -4,4 +4,4 @@ Feature: User login
     Given User is on the login page
     When User enters incorrect credentials
     And User submits the login form
-    Then System displays the "Your email or pasword is incorrect!" message
+    Then System displays the "Your email or password is incorrect!" message

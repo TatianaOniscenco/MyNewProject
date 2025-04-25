@@ -6,53 +6,60 @@ import io.cucumber.java.*;
 import java.nio.file.Paths;
 
 public class Hooks {
-    public static Playwright playwright;
-    public static Browser browser;
+    private Playwright playwright;
+    private Browser browser;
+    private BrowserContext context;
+    private Page page;
 
-    public static BrowserContext context;
-    public static Page page;
-
+    // Global setup (runs once per test run)
     @BeforeAll
     public static void beforeAll() {
-        playwright = Playwright.create();
-        browser = playwright.chromium().launch(
-                new BrowserType.LaunchOptions().setHeadless(false)
-        );
+        System.out.println("🌍 [BeforeAll] Global test setup");
     }
 
     @AfterAll
     public static void afterAll() {
-        if (playwright != null) {
-            playwright.close();
-        }
+        System.out.println("🧹 [AfterAll] Global test teardown");
     }
 
+    // Thread-local for page access in step defs
+    private static final ThreadLocal<Page> threadLocalPage = new ThreadLocal<>();
+
     @Before
-    public void beforeScenario() {
+    public void beforeScenario(Scenario scenario) {
+        System.out.println("🚀 Scenario: " + scenario.getName() +
+                " | Thread: " + Thread.currentThread().getName() +
+                " | Time: " + java.time.LocalTime.now());
+
+        playwright = Playwright.create();
+
+        browser = playwright.chromium().launch(
+                new BrowserType.LaunchOptions().setHeadless(false)
+        );
+
         context = browser.newContext();
         page = context.newPage();
-        playwright.selectors().setTestIdAttribute("data-qa"); // ✅ set testId attribute
+        playwright.selectors().setTestIdAttribute("data-qa");
+
+        threadLocalPage.set(page);
     }
 
     @After
-
     public void afterScenario(Scenario scenario) {
         if (scenario.isFailed()) {
-            Hooks.page.screenshot(new Page.ScreenshotOptions()
+            page.screenshot(new Page.ScreenshotOptions()
                     .setPath(Paths.get("target/screenshots/" + scenario.getName().replaceAll(" ", "_") + "_FAILED.png")));
             System.out.println("📸 Screenshot taken for failed scenario: " + scenario.getName());
         }
 
-        if (Hooks.context != null) {
-            Hooks.context.close();
-        }
-        if (context != null) {
-            context.close();
-        }
+        if (context != null) context.close();
+        if (browser != null) browser.close();
+        if (playwright != null) playwright.close();
 
+        threadLocalPage.remove();
     }
-    // Getters to access shared Page instance from step files
+
     public static Page getPage() {
-        return page;
+        return threadLocalPage.get();
     }
 }
