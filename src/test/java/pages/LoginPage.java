@@ -1,5 +1,6 @@
 package pages;
 
+import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 
 public class LoginPage {
@@ -13,6 +14,7 @@ public class LoginPage {
     private final String loginEmailField = "[data-qa='login-email']";
     private final String loginPasswordField = "[data-qa='login-password']";
     private final String loginButton = "[data-qa='login-button']";
+    private final String deleteAccountLink = "text= Delete Account";
 
     public LoginPage(Page page) {
         this.page = page;
@@ -55,5 +57,13 @@ public class LoginPage {
     // --- Assertion helper ---
     public boolean isErrorMessageVisible(String message) {
         return page.locator("text=" + message).isVisible();
+    }
+
+    public boolean isLoggedInAsVisible(String username) {
+        return page.locator("text= Logged in as ").locator("b", new Locator.LocatorOptions().setHasText(username)).isVisible();
+    }
+
+    public void clickDeleteAccountButton() {
+        page.locator(deleteAccountLink).click();
     }
 }
