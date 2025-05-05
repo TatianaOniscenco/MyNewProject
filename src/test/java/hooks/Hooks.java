@@ -14,12 +14,14 @@ public class Hooks {
     // Global setup (runs once per test run)
     @BeforeAll
     public static void beforeAll() {
-        System.out.println("🌍 [BeforeAll] Global test setup");
+        System.out.println("🌍 [BeforeAll] Global test setup"+
+                " | Time: " + java.time.LocalTime.now());
     }
 
     @AfterAll
     public static void afterAll() {
-        System.out.println("🧹 [AfterAll] Global test teardown");
+        System.out.println("🧹 [AfterAll] Global test teardown"+
+                " | Time: " + java.time.LocalTime.now());
     }
 
     // Thread-local for page access in step defs

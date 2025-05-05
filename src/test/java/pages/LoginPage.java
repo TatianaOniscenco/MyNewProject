@@ -20,14 +20,6 @@ public class LoginPage {
         this.page = page;
     }
 
-    public void navigateToLoginPage() {
-        page.navigate("https://www.automationexercise.com");
-        page.waitForLoadState();
-        page.locator(signupLink).click();
-        page.waitForSelector(signupNameField);
-        page.waitForSelector(loginEmailField);
-    }
-
     // --- Login section ---
     public void enterLoginEmail(String email) {
         page.locator(loginEmailField).fill(email);
