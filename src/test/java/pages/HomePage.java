@@ -11,6 +11,11 @@ public class HomePage {
     // Selectors
     private final String signupLoginLink = "[href='/login']";
     private final String productsLink = "[href='/products']";
+    private final String cartLink = "[href='/view_cart']";
+    private final String testCasesLink = "[href='/test_cases']";
+    private final String apiTestingLink = "[href='/api_list']";
+    private final String videoTutorialsLink = "[href='https://www.youtube.com/c/AutomationExercise']";
+    private final String contactUsLink = "[href='/contact_us']";
 
     public HomePage(Page page) {
         this.page = page;
@@ -28,5 +33,20 @@ public class HomePage {
 
     public void goToProductsPage() {
         page.locator(productsLink).click();
+    }
+    public void goToCartPage() {
+        page.locator(cartLink).click();
+    }
+    public void goToTestCases() {
+        page.locator(testCasesLink).click();
+    }
+    public void goToApiTesting() {
+        page.locator(apiTestingLink).click();
+    }
+    public void goToVideoTutorials() {
+        page.locator(videoTutorialsLink).click();
+    }
+    public void goToContactUs() {
+        page.locator(contactUsLink).click();
     }
 }

@@ -18,6 +18,7 @@ public class CommonSteps {
     public void user_is_on_the_login_page() {
         homePage.openHomePage();
         homePage.goToLoginPage();
+
     }
 
     @Then("System displays the {string} message")
