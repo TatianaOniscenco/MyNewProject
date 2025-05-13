@@ -26,11 +26,6 @@ public class LoginSteps {
         loginPage.clickLoginButton();
     }
 
-    @And("System displays {string}")
-    public void systemDisplaysUserName(String expectedText) {
-        String actualText = page.locator("li:has-text('Logged in as Tatiana Oniscenco')").innerText().trim();
-        assertTrue(actualText.contains(expectedText));
-    }
 
 /**
     @And("User clicks Delete account button")

@@ -2,9 +2,24 @@ package steps;
 
 import com.microsoft.playwright.Page;
 import hooks.Hooks;
+import io.cucumber.java.en.And;
 import pages.AccountCreatedPage;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AccountCreatedSteps {
     Page page = Hooks.getPage();
     AccountCreatedPage accountCreatedPage = new AccountCreatedPage(page);
+
+    @And ("User is redirected to Account Created page")
+        public void isOnAccountCreatedPage() {
+            page.navigate("https://automationexercise.com/account_created");
+            page.waitForLoadState();
+        }
+    @And("System displays {string}")
+    public void systemDisplaysUserName(String expectedText) {
+        String actualText = accountCreatedPage.getLoggedInText();
+        assertTrue(actualText.contains(expectedText),
+                "Expected to find text: " + expectedText + " but found: " + actualText);
+    }
 }
