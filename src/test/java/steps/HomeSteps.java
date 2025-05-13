@@ -17,4 +17,9 @@ public class HomeSteps {
     public void navigateToLoginPage() {
         homePage.goToLoginPage();
     }
+
+    @And("User is redirected to homepage")
+    public void isRedirectedToHomepage() {
+        homePage.isVisible();
+    }
 }

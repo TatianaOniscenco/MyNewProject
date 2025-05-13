@@ -15,8 +15,8 @@ public class LoginSteps {
         assertTrue(loginPage.isErrorMessageVisible(message));
     }
 
-    @When("User enters invalid {string} and {string} credentials")
-    public void inputInvalidCredentials(String login, String password) {
+    @When("User inputs {string} and {string} credentials")
+    public void inputCredentials(String login, String password) {
         loginPage.enterLoginEmail(login);
         loginPage.enterLoginPassword(password);
     }
@@ -24,12 +24,6 @@ public class LoginSteps {
     @And("User submits the login form")
     public void submitLoginForm() {
         loginPage.clickLoginButton();
-    }
-
-    @When("User enters valid {string} and {string} credentials")
-    public void inputValidCredentials(String login, String password) {
-        loginPage.enterLoginEmail(login);
-        loginPage.enterLoginPassword(password);
     }
 
     @And("System displays {string}")

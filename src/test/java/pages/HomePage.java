@@ -9,6 +9,7 @@ public class HomePage {
     private final Page page;
 
     // Selectors
+    private final String homePageLink = "[href='https://www.automationexercise.com/']";
     private final String signupLoginLink = "[href='/login']";
     private final String productsLink = "[href='/products']";
     private final String cartLink = "[href='/view_cart']";
@@ -48,5 +49,9 @@ public class HomePage {
     }
     public void goToContactUs() {
         page.locator(contactUsLink).click();
+    }
+
+    public void isVisible() {
+        page.locator(homePageLink).isVisible();
     }
 }

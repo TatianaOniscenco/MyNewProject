@@ -4,7 +4,7 @@ Feature: User login
   Scenario: Login with incorrect email and password
     Given Homepage is loaded
     And User navigates to login page
-    When User enters invalid "user@invalid.com" and "123456R" credentials
+    When User inputs "user@invalid.com" and "123456R" credentials
     And User submits the login form
     Then System displays the "Your email or password is incorrect!" message
 
@@ -13,7 +13,8 @@ Feature: User login
   Scenario: Login with correct email and password
     Given Homepage is loaded
     And User navigates to login page
-    When User enters valid "tatiana.oniscenco@endava.com" and "password" credentials
+    When User inputs "tatiana.oniscenco@endava.com" and "password" credentials
     And User submits the login form
+    And User is redirected to homepage
     Then System displays "Logged in as Tatiana Oniscenco"
 
