@@ -10,6 +10,11 @@ public class LoginSteps {
     Page page = Hooks.getPage();
     LoginPage loginPage = new LoginPage(page);
 
+    @Then("System displays the {string} message")
+    public void systemDisplaysTheMessage(String message) {
+        assertTrue(loginPage.isErrorMessageVisible(message));
+    }
+
     @When("User enters invalid {string} and {string} credentials")
     public void inputInvalidCredentials(String login, String password) {
         loginPage.enterLoginEmail(login);
