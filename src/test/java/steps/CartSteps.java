@@ -14,7 +14,7 @@ public class CartSteps {
     CartPage cartPage = new CartPage(page);
 
     @Then("selected {string} is visible in the cart")
-    public void productShouldBeVisible(String productName) {
+    public void areProductsVisible(String productName) {
         assertTrue(cartPage.isProductInCart(productName), productName + " not found in cart");
     }
 

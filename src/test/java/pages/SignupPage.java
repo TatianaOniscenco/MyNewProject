@@ -5,7 +5,6 @@ import com.microsoft.playwright.Page;
 public class SignupPage {
     private final Page page;
 
-    // Private locators for signup form
     private final String passwordField = "[data-qa='password']";
     private final String firstNameField = "[data-qa='first_name']";
     private final String lastNameField = "[data-qa='last_name']";

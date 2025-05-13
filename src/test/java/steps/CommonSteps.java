@@ -14,7 +14,7 @@ public class CommonSteps {
     LoginPage loginPage = new LoginPage(Hooks.getPage());
 
     @Given("User is on the login page")
-    public void userIsOnTheLoginPage() {
+    public void isOnTheLoginPage() {
         homePage.openHomePage();
         homePage.goToLoginPage();
     }

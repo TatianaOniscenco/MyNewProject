@@ -11,18 +11,18 @@ public class LoginSteps {
     LoginPage loginPage = new LoginPage(page);
 
     @When("User enters invalid {string} and {string} credentials")
-    public void userEntersInvalidCredentials(String login, String password) {
+    public void inputInvalidCredentials(String login, String password) {
         loginPage.enterLoginEmail(login);
         loginPage.enterLoginPassword(password);
     }
 
     @And("User submits the login form")
-    public void userSubmitsLoginForm() {
+    public void submitLoginForm() {
         loginPage.clickLoginButton();
     }
 
     @When("User enters valid {string} and {string} credentials")
-    public void userEntersValidCredentials(String login, String password) {
+    public void inputValidCredentials(String login, String password) {
         loginPage.enterLoginEmail(login);
         loginPage.enterLoginPassword(password);
     }

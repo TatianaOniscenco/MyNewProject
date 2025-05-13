@@ -19,7 +19,7 @@ public class SignupSteps {
     Faker faker = new Faker();
 
     @When("User enters valid user information")
-    public void user_enters_valid_user_information() {
+    public void enterValidUserInformation() {
         loginPage.enterSignupName(faker.name().fullName());
         loginPage.enterSignupEmail(faker.internet().emailAddress());
         loginPage.clickSignupButton();
@@ -41,7 +41,7 @@ public class SignupSteps {
     }
 
     @And("User submits the signup form")
-    public void user_submits_the_signup_form() {
+    public void submitSignupForm() {
         signupPage.clickCreateAccountButton();
     }
 }
