@@ -6,21 +6,18 @@ import com.microsoft.playwright.Page;
 public class LoginPage {
     private final Page page;
 
-    // Private locators
-    private final String signupLink = "text= Signup / Login";
     private final String signupNameField = "[data-qa='signup-name']";
     private final String signupEmailField = "[data-qa='signup-email']";
     private final String signupButton = "[data-qa='signup-button']";
     private final String loginEmailField = "[data-qa='login-email']";
     private final String loginPasswordField = "[data-qa='login-password']";
     private final String loginButton = "[data-qa='login-button']";
-    private final String deleteAccountLink = "text= Delete Account";
+
 
     public LoginPage(Page page) {
         this.page = page;
     }
 
-    // --- Login section ---
     public void enterLoginEmail(String email) {
         page.locator(loginEmailField).fill(email);
     }
@@ -51,11 +48,4 @@ public class LoginPage {
         return page.locator("text=" + message).isVisible();
     }
 
-    public boolean isLoggedInAsVisible(String username) {
-        return page.locator("text= Logged in as ").locator("b", new Locator.LocatorOptions().setHasText(username)).isVisible();
-    }
-
-    public void clickDeleteAccountButton() {
-        page.locator(deleteAccountLink).click();
-    }
 }

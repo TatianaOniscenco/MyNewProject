@@ -1,7 +1,7 @@
 Feature: Add products to the cart
 
   @Positive
-  Scenario Outline: User adds multiple products to the cart and verifies cart details
+  Scenario Outline: Add one product to the cart and verify cart details
     Given User is on Products page
     When adds "<productName>" product to the cart
     #And chooses to continue shopping
