@@ -16,10 +16,5 @@ public class AccountCreatedSteps {
             page.navigate("https://automationexercise.com/account_created");
             page.waitForLoadState();
         }
-    @And("System displays {string}")
-    public void systemDisplaysUserName(String expectedText) {
-        String actualText = accountCreatedPage.getLoggedInText();
-        assertTrue(actualText.contains(expectedText),
-                "Expected to find text: " + expectedText + " but found: " + actualText);
-    }
+
 }

@@ -5,6 +5,8 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import pages.HomePage;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public class HomeSteps {
     HomePage homePage = new HomePage(Hooks.getPage());
 
@@ -21,5 +23,11 @@ public class HomeSteps {
     @And("User is redirected to homepage")
     public void isRedirectedToHomepage() {
         homePage.isVisible();
+    }
+    @And("System displays {string} up in the header")
+    public void systemDisplaysUserName(String expectedText) {
+        String actualText = homePage.getLoggedInText();
+        assertTrue(actualText.contains(expectedText),
+                "Expected to find text: " + expectedText + " but found: " + actualText);
     }
 }

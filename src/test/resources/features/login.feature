@@ -16,5 +16,5 @@ Feature: User login
     When User inputs "tatiana.oniscenco@endava.com" and "password" credentials
     And User submits the login form
     And User is redirected to homepage
-    Then System displays "Logged in as Tatiana Oniscenco"
+    Then System displays "Logged in as Tatiana Oniscenco" up in the header
 

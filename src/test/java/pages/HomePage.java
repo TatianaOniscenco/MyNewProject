@@ -17,6 +17,7 @@ public class HomePage {
     private final String apiTestingLink = "[href='/api_list']";
     private final String videoTutorialsLink = "[href='https://www.youtube.com/c/AutomationExercise']";
     private final String contactUsLink = "[href='/contact_us']";
+    private final String loggedInTextLocator = "li:has-text('Logged in as')";
 
     public HomePage(Page page) {
         this.page = page;
@@ -30,6 +31,10 @@ public class HomePage {
 
     public void goToLoginPage() {
         page.locator(signupLoginLink).click();
+    }
+
+    public String getLoggedInText() {
+        return page.locator(loggedInTextLocator).innerText().trim();
     }
 
     public void goToProductsPage() {
