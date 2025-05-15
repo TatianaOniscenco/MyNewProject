@@ -3,6 +3,7 @@ package steps;
 import hooks.Hooks;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
+import io.cucumber.java.en.When;
 import pages.HomePage;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -29,5 +30,10 @@ public class HomeSteps {
         String actualText = homePage.getLoggedInText();
         assertTrue(actualText.contains(expectedText),
                 "Expected to find text: " + expectedText + " but found: " + actualText);
+    }
+
+    @When("User clicks Delete Account button")
+    public void clicksDeleteAccountButton() {
+        homePage.clickDeleteButton();
     }
 }

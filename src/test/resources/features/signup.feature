@@ -10,7 +10,12 @@ Feature: User signup
     When User enters valid account information
     And User submits the signup form clicking on Create Account button
     And User is redirected to Account Created page
-    Then System displays the "Account Created!" message
+    And System displays the "Account Created!" message
+    And User clicks Continue button
+    And User is redirected to homepage
+    And System displays "Logged in as" up in the header
+    When User clicks Delete Account button
+    Then System displays the "ACCOUNT DELETED!" message
 
   @Negative
   Scenario: Register user with existing email

@@ -18,6 +18,7 @@ public class HomePage {
     private final String videoTutorialsLink = "[href='https://www.youtube.com/c/AutomationExercise']";
     private final String contactUsLink = "[href='/contact_us']";
     private final String loggedInTextLocator = "li:has-text('Logged in as')";
+    private final String deleteButton = "[href='/delete_account']";
 
     public HomePage(Page page) {
         this.page = page;
@@ -58,5 +59,9 @@ public class HomePage {
 
     public void isVisible() {
         page.locator(homePageLink).isVisible();
+    }
+
+    public void clickDeleteButton() {
+        page.locator(deleteButton).click();
     }
 }

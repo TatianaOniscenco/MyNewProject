@@ -17,4 +17,8 @@ public class AccountCreatedSteps {
             page.waitForLoadState();
         }
 
+    @And("User clicks Continue button")
+    public void clicksContinueButton() {
+        accountCreatedPage.clickContinueButton();
+    }
 }
