@@ -14,17 +14,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SignupSteps {
     Page page = Hooks.getPage();
-    LoginPage loginPage = new LoginPage(page);
     SignupPage signupPage = new SignupPage(page);
     Faker faker = new Faker();
 
-    @When("User enters valid user information")
+    @When("User enters valid account information")
     public void enterValidUserInformation() {
-        loginPage.enterSignupName(faker.name().fullName());
-        loginPage.enterSignupEmail(faker.internet().emailAddress());
-        loginPage.clickSignupButton();
 
-        assertTrue(signupPage.isEnterAccountInfoVisible());
 
         List<String> countries = List.of("India", "United States", "Canada", "Australia", "Israel", "New Zealand", "Singapore");
         String selectedCountry = countries.get(new Random().nextInt(countries.size()));
@@ -40,8 +35,14 @@ public class SignupSteps {
         signupPage.enterMobileNumber(faker.phoneNumber().phoneNumber());
     }
 
-    @And("User submits the signup form")
+    @And("User submits the signup form clicking on Create Account button")
     public void submitSignupForm() {
         signupPage.clickCreateAccountButton();
+    }
+
+
+    @And("user is redirected to Signup page")
+    public void isRedirectedToSignupPage() {
+        assertTrue(signupPage.isEnterAccountInfoVisible());
     }
 }

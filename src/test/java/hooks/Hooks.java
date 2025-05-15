@@ -14,13 +14,13 @@ public class Hooks {
     // Global setup (runs once per test run)
     @BeforeAll
     public static void beforeAll() {
-        System.out.println("🌍 [BeforeAll] Global test setup"+
+        System.out.println(" [BeforeAll] Global test setup"+
                 " | Time: " + java.time.LocalTime.now());
     }
 
     @AfterAll
     public static void afterAll() {
-        System.out.println("🧹 [AfterAll] Global test teardown"+
+        System.out.println(" [AfterAll] Global test teardown"+
                 " | Time: " + java.time.LocalTime.now());
     }
 
@@ -29,7 +29,7 @@ public class Hooks {
 
     @Before
     public void beforeScenario(Scenario scenario) {
-        System.out.println("🚀 Scenario: " + scenario.getName() +
+        System.out.println(" Scenario: " + scenario.getName() +
                 " | Thread: " + Thread.currentThread().getName() +
                 " | Time: " + java.time.LocalTime.now());
 
@@ -51,7 +51,7 @@ public class Hooks {
         if (scenario.isFailed()) {
             page.screenshot(new Page.ScreenshotOptions()
                     .setPath(Paths.get("target/screenshots/" + scenario.getName().replaceAll(" ", "_") + "_FAILED.png")));
-            System.out.println("📸 Screenshot taken for failed scenario: " + scenario.getName());
+            System.out.println(" Screenshot taken for failed scenario: " + scenario.getName());
         }
 
         if (context != null) context.close();

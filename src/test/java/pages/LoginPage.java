@@ -47,4 +47,6 @@ public class LoginPage {
         return page.locator("text=" + message).isVisible();
     }
 
+
+
 }
