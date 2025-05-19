@@ -11,6 +11,31 @@ public class Hooks {
     private BrowserContext context;
     private Page page;
 
+    // Thread-local for page access in step defs
+    private static final ThreadLocal<Page> threadLocalPage = new ThreadLocal<>();
+    private static final ThreadLocal<String> threadLocalFirstName = new ThreadLocal<>();
+    private static final ThreadLocal<String> threadLocalLastName = new ThreadLocal<>();
+
+    public static void setFirstName(String firstName) {
+        threadLocalFirstName.set(firstName);
+    }
+
+    public static void setLastName(String lastName) {
+        threadLocalLastName.set(lastName);
+    }
+
+    public static String getFirstName() {
+        return threadLocalFirstName.get();
+    }
+
+    public static String getLastName() {
+        return threadLocalLastName.get();
+    }
+
+    public static String getFullName() {
+        return getFirstName() + " " + getLastName();
+    }
+
     // Global setup (runs once per test run)
     @BeforeAll
     public static void beforeAll() {
@@ -23,9 +48,6 @@ public class Hooks {
         System.out.println(" [AfterAll] Global test teardown"+
                 " | Time: " + java.time.LocalTime.now());
     }
-
-    // Thread-local for page access in step defs
-    private static final ThreadLocal<Page> threadLocalPage = new ThreadLocal<>();
 
     @Before
     public void beforeScenario(Scenario scenario) {

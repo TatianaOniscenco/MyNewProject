@@ -20,7 +20,7 @@ public class AccountCreatedPage {
 
     public void clickContinueButton() {
         page.waitForNavigation(() -> page.locator(continueButton).click());
-        page.waitForTimeout(10000); // just 10 second for realism
+        page.waitForTimeout(1000); // just 1 second for realism
     }
 
     public void isVisible() {

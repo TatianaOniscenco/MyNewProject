@@ -6,6 +6,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import pages.HomePage;
 
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class HomeSteps {
@@ -25,6 +26,8 @@ public class HomeSteps {
     public void isRedirectedToHomepage() {
         homePage.isVisible();
     }
+
+    //for existing user
     @And("System displays {string} up in the header")
     public void systemDisplaysUserName(String expectedText) {
         String actualText = homePage.getLoggedInText();
@@ -36,4 +39,13 @@ public class HomeSteps {
     public void clicksDeleteAccountButton() {
         homePage.clickDeleteButton();
     }
+
+    @And("System displays username up in the header")
+    public void systemDisplaysAndUsernameUpInTheHeader() {
+        assertThat(homePage.getLoggedInHeaderLocator()).isVisible();
+
+    }
+
+    //for newly created user
+
 }

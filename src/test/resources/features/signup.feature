@@ -13,7 +13,7 @@ Feature: User signup
     And System displays the "Account Created!" message
     And User clicks Continue button
     And User is redirected to homepage
-    And System displays "Logged in as" up in the header
+    And System displays username up in the header
     When User clicks Delete Account button
     Then System displays the "ACCOUNT DELETED!" message
 

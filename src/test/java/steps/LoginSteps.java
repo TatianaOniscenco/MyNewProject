@@ -5,12 +5,16 @@ import hooks.Hooks;
 import io.cucumber.java.en.*;
 import net.datafaker.Faker;
 import pages.LoginPage;
+
+
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LoginSteps {
     Page page = Hooks.getPage();
     LoginPage loginPage = new LoginPage(page);
     Faker faker = new Faker();
+
 
 
 
@@ -25,10 +29,19 @@ public class LoginSteps {
         loginPage.clickLoginButton();
     }
 
+    //for newly created user
     @And("User inputs new valid credentials in New User Signup form")
     public void inputsNewValidCredentialsInNewUserSignupForm() {
-        loginPage.enterSignupName(faker.name().fullName());
+        String firstName = faker.name().firstName();
+        String lastName = faker.name().lastName();
+        String fullName = firstName + " " + lastName;
+
+        Hooks.setFirstName(firstName);
+        Hooks.setLastName(lastName);
+
+        loginPage.enterSignupName(fullName);
         loginPage.enterSignupEmail(faker.internet().emailAddress());
+
     }
 
     @And("User clicks on Signup button")

@@ -3,6 +3,7 @@ package pages;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.WaitUntilState;
+import hooks.Hooks;
 
 public class HomePage {
 
@@ -63,5 +64,11 @@ public class HomePage {
 
     public void clickDeleteButton() {
         page.locator(deleteButton).click();
+    }
+
+
+    public Locator getLoggedInHeaderLocator() {
+        System.out.println("Fullname: " + Hooks.getFullName());
+        return page.getByText("Logged in as " + Hooks.getFullName());
     }
 }
