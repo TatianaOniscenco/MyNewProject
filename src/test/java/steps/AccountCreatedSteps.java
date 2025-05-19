@@ -13,8 +13,7 @@ public class AccountCreatedSteps {
 
     @And ("User is redirected to Account Created page")
         public void isOnAccountCreatedPage() {
-            page.navigate("https://automationexercise.com/account_created");
-            page.waitForLoadState();
+        accountCreatedPage.isVisible();
         }
 
     @And("User clicks Continue button")

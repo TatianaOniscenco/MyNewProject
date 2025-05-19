@@ -50,6 +50,13 @@
         </dependency>
 
         <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-suite</artifactId>
+            <version>1.12.1</version> <!-- or the version matching your JUnit 5 setup -->
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>net.datafaker</groupId>
             <artifactId>datafaker</artifactId>
             <version>2.1.0</version>
@@ -101,6 +108,7 @@
                 <artifactId>junit-platform-engine</artifactId>
                 <version>1.12.1</version>
             </dependency>
+
             <dependency>
                 <groupId>org.junit.platform</groupId>
                 <artifactId>junit-platform-commons</artifactId>

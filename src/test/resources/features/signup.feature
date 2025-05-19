@@ -1,6 +1,6 @@
 Feature: User signup
 
-  @Positive
+  @Positive @Only
   Scenario: Successful user signup
     Given Homepage is loaded
     And User navigates to login page

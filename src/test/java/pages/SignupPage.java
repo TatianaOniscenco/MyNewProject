@@ -54,6 +54,7 @@ public class SignupPage {
 
     public void enterMobileNumber(String mobileNumber) {
         page.locator(mobileNumberField).fill(mobileNumber);
+        page.waitForTimeout(3000); // 3-second pause for realism (optional)
     }
 
     public void clickCreateAccountButton() {
