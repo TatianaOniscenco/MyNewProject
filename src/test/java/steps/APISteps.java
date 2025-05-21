@@ -1,5 +1,6 @@
 package steps;
 
+import config.ConfigReader;
 import io.cucumber.java.en.*;
 import io.restassured.response.Response;
 
@@ -19,37 +20,27 @@ public class APISteps {
     }
 
     @When("User does GET call to {string} endpoint")
-    public void userDoesGETCallToEndpoint(String url) {
+    public void userDoesGETCallToEndpoint(String endpoint) {
+        String baseUrl = ConfigReader.get("base.url");
+
         response = given()
-                .log().all()                // logs the full request
+                .log().all()
                 .when()
-                .get(url)
+                .get(baseUrl + endpoint)
                 .then()
-                .log().body()              // logs the full response body
+                .log().body()
                 .extract()
                 .response();
     }
 
-    @Then("Response code is {int}")
-    public void responseCodeIs(int statusCode) {
-        assertEquals(statusCode, response.getStatusCode(),
-                "❌ Expected status " + statusCode + " but got " + response.getStatusCode());
-    }
-
-    @And("Response contains a list of products")
-    public void responseContainsListOfProducts() {
-        assertNotNull(response.jsonPath().getList("products"),
-                "❌ No 'products' key found in response");
-        assertTrue(response.jsonPath().getList("products").size() > 0,
-                "❌ 'products' list is empty");
-    }
-
     @When("User does POST call to {string} endpoint")
-    public void userDoesPOSTCallToEndpoint(String url) {
+    public void userDoesPOSTCallToEndpoint(String endpoint) {
+        String baseUrl = ConfigReader.get("base.url");
+
         response = given()
                 .log().all()                // logs the full request
                 .when()
-                .post(url)
+                .post(baseUrl + endpoint)
                 .then()
                 .log().body()              // logs the full response body
                 .extract()
@@ -69,5 +60,18 @@ public class APISteps {
         assertFalse(brands.isEmpty(), "❌ 'brands' list is empty");
 
         System.out.println("✅ Found " + brands.size() + " brands.");
+    }
+    @Then("Response code is {int}")
+    public void responseCodeIs(int statusCode) {
+        assertEquals(statusCode, response.getStatusCode(),
+                "❌ Expected status " + statusCode + " but got " + response.getStatusCode());
+    }
+
+    @And("Response contains a list of products")
+    public void responseContainsListOfProducts() {
+        assertNotNull(response.jsonPath().getList("products"),
+                "❌ No 'products' key found in response");
+        assertTrue(response.jsonPath().getList("products").size() > 0,
+                "❌ 'products' list is empty");
     }
 }

@@ -5,18 +5,18 @@ Feature: APIs
 
   @Positive
   Scenario: Get all products list
-    When User does GET call to "https://automationexercise.com/api/productsList" endpoint
+    When User does GET call to "/api/productsList" endpoint
     Then Response code is 200
     And Response contains a list of products
 
   @Negative
   Scenario: Post to all products list
-    When User does POST call to "https://automationexercise.com/api/productsList" endpoint
+    When User does POST call to "/api/productsList" endpoint
     Then Response code is 200
     And Response message is "This request method is not supported"
 
   @Positive
   Scenario: Get all products list
-    When User does GET call to "https://automationexercise.com/api/brandsList" endpoint
+    When User does GET call to "/api/brandsList" endpoint
     Then Response code is 200
     And Response contains a list of brands
