@@ -3,6 +3,8 @@ package steps;
 import io.cucumber.java.en.*;
 import io.restassured.response.Response;
 
+import java.util.List;
+
 import static io.restassured.RestAssured.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -40,5 +42,32 @@ public class APISteps {
                 "❌ No 'products' key found in response");
         assertTrue(response.jsonPath().getList("products").size() > 0,
                 "❌ 'products' list is empty");
+    }
+
+    @When("User does POST call to {string} endpoint")
+    public void userDoesPOSTCallToEndpoint(String url) {
+        response = given()
+                .log().all()                // logs the full request
+                .when()
+                .post(url)
+                .then()
+                .log().body()              // logs the full response body
+                .extract()
+                .response();
+    }
+    @And("Response message is {string}")
+    public void responseMessageIs(String expectedMessage) {
+        String actual = response.getBody().asString();
+        assertTrue(actual.contains(expectedMessage),
+                "Expected message: " + expectedMessage + "\nBut got: " + actual);
+    }
+    @And("Response contains a list of brands")
+    public void responseContainsAListOfBrands() {
+        List<?> brands = response.jsonPath().getList("brands");
+
+        assertNotNull(brands, "❌ 'brands' key is missing in the response");
+        assertFalse(brands.isEmpty(), "❌ 'brands' list is empty");
+
+        System.out.println("✅ Found " + brands.size() + " brands.");
     }
 }
