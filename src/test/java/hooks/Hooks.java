@@ -2,6 +2,8 @@ package hooks;
 
 import com.microsoft.playwright.*;
 import io.cucumber.java.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Paths;
 
@@ -15,6 +17,8 @@ public class Hooks {
     private static final ThreadLocal<Page> threadLocalPage = new ThreadLocal<>();
     private static final ThreadLocal<String> threadLocalFirstName = new ThreadLocal<>();
     private static final ThreadLocal<String> threadLocalLastName = new ThreadLocal<>();
+
+    private static final Logger log = LoggerFactory.getLogger(Hooks.class);
 
     public static void setFirstName(String firstName) {
         threadLocalFirstName.set(firstName);
@@ -51,6 +55,9 @@ public class Hooks {
 
     @Before
     public void beforeScenario(Scenario scenario) {
+        log.info("START [{}] - {}", scenario.getSourceTagNames(), scenario.getName());
+        log.info("Feature: {} (Line: {})", scenario.getUri(), scenario.getLine());
+
         System.out.println(" Scenario: " + scenario.getName() +
                 " | Thread: " + Thread.currentThread().getName() +
                 " | Time: " + java.time.LocalTime.now());
@@ -74,7 +81,11 @@ public class Hooks {
             page.screenshot(new Page.ScreenshotOptions()
                     .setPath(Paths.get("target/screenshots/" + scenario.getName().replaceAll(" ", "_") + "_FAILED.png")));
             System.out.println(" Screenshot taken for failed scenario: " + scenario.getName());
+            log.error("FAILED: {}", scenario.getName());
+        } else {
+            log.info("PASSED: {}", scenario.getName());
         }
+        log.info("END - {}", scenario.getId());
 
         if (context != null) context.close();
         if (browser != null) browser.close();
