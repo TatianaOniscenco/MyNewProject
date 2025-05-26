@@ -16,7 +16,7 @@ Feature: APIs
     And Response message is "This request method is not supported"
 
   @Positive
-  Scenario: Get all products list
+  Scenario: Get all brands list
     When User does GET call to "/api/brandsList" endpoint
     Then Response code is 200
     And Response contains a list of brands
