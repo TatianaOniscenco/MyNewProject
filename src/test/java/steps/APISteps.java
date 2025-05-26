@@ -43,14 +43,14 @@ public class APISteps {
     public void responseCodeIs(int expectedCode) {
         int actualCode = response.statusCode();
         assertEquals(expectedCode, actualCode,
-                "❌ Expected code: " + expectedCode + ", but got: " + actualCode);
+                " Expected code: " + expectedCode + ", but got: " + actualCode);
     }
 
     @And("Response message is {string}")
     public void responseMessageIs(String expectedMessage) {
         String actual = response.getBody().asString();
         assertTrue(actual.contains(expectedMessage),
-                "❌ Expected message: '" + expectedMessage + "'\nBut got: '" + actual + "'");
+                " Expected message: '" + expectedMessage + "'\nBut got: '" + actual + "'");
     }
 
     @And("Response contains a list of products")
@@ -58,10 +58,10 @@ public class APISteps {
         ObjectMapper mapper = new ObjectMapper();
         ProductResponse productResponse = mapper.readValue(response.asString(), ProductResponse.class);
 
-        assertNotNull(productResponse.products, "❌ 'products' list is null");
-        assertFalse(productResponse.products.isEmpty(), "❌ 'products' list is empty");
+        assertNotNull(productResponse.products, " 'products' list is null");
+        assertFalse(productResponse.products.isEmpty(), " 'products' list is empty");
 
-        System.out.println("✅ Parsed " + productResponse.products.size() + " products:");
+        System.out.println(" Parsed " + productResponse.products.size() + " products:");
         productResponse.products.stream()
                 .limit(3)
                 .forEach(product -> System.out.println(" - " + product));
@@ -71,9 +71,9 @@ public class APISteps {
     public void responseContainsListOfBrands() {
         List<?> brands = response.jsonPath().getList("brands");
 
-        assertNotNull(brands, "❌ 'brands' key not found in response");
-        assertFalse(brands.isEmpty(), "❌ 'brands' list is empty");
+        assertNotNull(brands, " 'brands' key not found in response");
+        assertFalse(brands.isEmpty(), " 'brands' list is empty");
 
-        System.out.println("✅ Found " + brands.size() + " brands.");
+        System.out.println(" Found " + brands.size() + " brands.");
     }
 }
