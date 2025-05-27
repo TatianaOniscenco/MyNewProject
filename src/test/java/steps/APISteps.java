@@ -1,6 +1,6 @@
 package steps;
 
-import api.actions.GetProductActions;
+import api.actions.ProductApi;
 import api.dtos.responses.ProductResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.en.*;
@@ -16,15 +16,15 @@ public class APISteps {
 
     @Given("System is up and running")
     public void systemIsUpAndRunning() {
-        System.out.println("🟢 System is assumed to be up.");
+        System.out.println("System is assumed to be up.");
     }
 
     @When("User does GET call to {string} endpoint")
     public void userDoesGETCallToEndpoint(String endpoint) {
         if (endpoint.contains("brands")) {
-            response = GetProductActions.getAllBrands();
+            response = ProductApi.getAllBrands();
         } else if (endpoint.contains("productsList")) {
-            response = GetProductActions.getAllProducts();
+            response = ProductApi.getAllProducts();
         } else {
             throw new IllegalArgumentException("Unsupported endpoint: " + endpoint);
         }
@@ -33,7 +33,7 @@ public class APISteps {
     @When("User does POST call to {string} endpoint")
     public void userDoesPOSTCallToEndpoint(String endpoint) {
         if (endpoint.contains("productsList")) {
-            response = GetProductActions.postToProductsList();
+            response = ProductApi.postToProductsList();
         } else {
             throw new IllegalArgumentException("Unsupported endpoint: " + endpoint);
         }
@@ -76,4 +76,39 @@ public class APISteps {
 
         System.out.println(" Found " + brands.size() + " brands.");
     }
+
+    @When("User does PUT call to {string} endpoint")
+    public void userDoesPUTCallToEndpoint(String endpoint) {
+        if (endpoint.contains("brands")) {
+            response = ProductApi.putAllBrands();
+        } else {
+            throw new IllegalArgumentException("Unsupported endpoint: " + endpoint);
+        }
+    }
+
+    @When("User searches for {string} via POST to {string}")
+    public void postSearchWithProduct(String productName, String endpoint) {
+        if (endpoint.contains("searchProduct")) {
+            response = ProductApi.postToSearchProduct(productName);
+        } else {
+            throw new IllegalArgumentException("Unsupported endpoint: " + endpoint);
+        }
+
+    }
+
+    @And("Response contains searched products list")
+    public void responseContainsSearchedProductsList() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        ProductResponse productResponse = mapper.readValue(response.asString(), ProductResponse.class);
+
+        assertNotNull(productResponse.products, " 'products' list is null");
+        assertFalse(productResponse.products.isEmpty(), " 'products' list is empty");
+
+        System.out.println(" Found " + productResponse.products.size() + " matching products:");
+        productResponse.products.stream()
+                .limit(3)
+                .forEach(product -> System.out.println(" - " + product));
+    }
+
+
 }

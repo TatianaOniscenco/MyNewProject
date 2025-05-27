@@ -16,7 +16,10 @@ public class LoginSteps {
     Faker faker = new Faker();
 
 
-
+    @Then("System displays the {string} message")
+    public void systemDisplaysTheMessage(String message) {
+        assertTrue(loginPage.isErrorMessageVisible(message));
+    }
 
     @When("User inputs {string} and {string} credentials")
     public void inputCredentials(String login, String password) {

@@ -58,6 +58,12 @@ public class Hooks {
         log.info("START [{}] - {}", scenario.getSourceTagNames(), scenario.getName());
         log.info("Feature: {} (Line: {})", scenario.getUri(), scenario.getLine());
 
+        // Skip Playwright/browser setup for @API-tagged tests
+        if (scenario.getSourceTagNames().contains("@API")) {
+            System.out.println(" 🧪 API scenario detected — skipping browser setup.");
+            return;
+        }
+
         System.out.println(" Scenario: " + scenario.getName() +
                 " | Thread: " + Thread.currentThread().getName() +
                 " | Time: " + java.time.LocalTime.now());
