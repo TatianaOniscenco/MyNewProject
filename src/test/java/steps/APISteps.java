@@ -1,7 +1,7 @@
 package steps;
 
-import api.actions.ProductApi;
-import api.dtos.responses.ProductResponse;
+import api.actions.ApiActions;
+import api.dtos.responses.ProductListResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.en.*;
 import io.restassured.response.Response;
@@ -22,9 +22,9 @@ public class APISteps {
     @When("User does GET call to {string} endpoint")
     public void userDoesGETCallToEndpoint(String endpoint) {
         if (endpoint.contains("brands")) {
-            response = ProductApi.getAllBrands();
+            response = ApiActions.getAllBrands();
         } else if (endpoint.contains("productsList")) {
-            response = ProductApi.getAllProducts();
+            response = ApiActions.getAllProducts();
         } else {
             throw new IllegalArgumentException("Unsupported endpoint: " + endpoint);
         }
@@ -33,7 +33,9 @@ public class APISteps {
     @When("User does POST call to {string} endpoint")
     public void userDoesPOSTCallToEndpoint(String endpoint) {
         if (endpoint.contains("productsList")) {
-            response = ProductApi.postToProductsList();
+            response = ApiActions.postToProductsList();
+        } else if (endpoint.contains("searchProduct")){
+            response = ApiActions.postToSearchProduct();
         } else {
             throw new IllegalArgumentException("Unsupported endpoint: " + endpoint);
         }
@@ -56,13 +58,13 @@ public class APISteps {
     @And("Response contains a list of products")
     public void responseContainsListOfProducts() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
-        ProductResponse productResponse = mapper.readValue(response.asString(), ProductResponse.class);
+        ProductListResponse productListResponse = mapper.readValue(response.asString(), ProductListResponse.class);
 
-        assertNotNull(productResponse.products, " 'products' list is null");
-        assertFalse(productResponse.products.isEmpty(), " 'products' list is empty");
+        assertNotNull(productListResponse.products, " 'products' list is null");
+        assertFalse(productListResponse.products.isEmpty(), " 'products' list is empty");
 
-        System.out.println(" Parsed " + productResponse.products.size() + " products:");
-        productResponse.products.stream()
+        System.out.println(" Parsed " + productListResponse.products.size() + " products:");
+        productListResponse.products.stream()
                 .limit(3)
                 .forEach(product -> System.out.println(" - " + product));
     }
@@ -80,7 +82,7 @@ public class APISteps {
     @When("User does PUT call to {string} endpoint")
     public void userDoesPUTCallToEndpoint(String endpoint) {
         if (endpoint.contains("brands")) {
-            response = ProductApi.putAllBrands();
+            response = ApiActions.putAllBrands();
         } else {
             throw new IllegalArgumentException("Unsupported endpoint: " + endpoint);
         }
@@ -89,7 +91,7 @@ public class APISteps {
     @When("User searches for {string} via POST to {string}")
     public void postSearchWithProduct(String productName, String endpoint) {
         if (endpoint.contains("searchProduct")) {
-            response = ProductApi.postToSearchProduct(productName);
+            response = ApiActions.postToSearchProduct(productName);
         } else {
             throw new IllegalArgumentException("Unsupported endpoint: " + endpoint);
         }
@@ -99,16 +101,42 @@ public class APISteps {
     @And("Response contains searched products list")
     public void responseContainsSearchedProductsList() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
-        ProductResponse productResponse = mapper.readValue(response.asString(), ProductResponse.class);
+        ProductListResponse productListResponse = mapper.readValue(response.asString(), ProductListResponse.class);
 
-        assertNotNull(productResponse.products, " 'products' list is null");
-        assertFalse(productResponse.products.isEmpty(), " 'products' list is empty");
+        assertNotNull(productListResponse.products, " 'products' list is null");
+        assertFalse(productListResponse.products.isEmpty(), " 'products' list is empty");
 
-        System.out.println(" Found " + productResponse.products.size() + " matching products:");
-        productResponse.products.stream()
+        System.out.println(" Found " + productListResponse.products.size() + " matching products:");
+        productListResponse.products.stream()
                 .limit(3)
                 .forEach(product -> System.out.println(" - " + product));
     }
 
 
+    @When("verify {string} and {string} via POST to {string}")
+    public void verifyAndViaPOSTTo(String email, String password, String endpoint) {
+        if (endpoint.contains("verifyLogin")) {
+            response = ApiActions.postToVerifyLogin(email, password);
+        } else {
+            throw new IllegalArgumentException("Unsupported endpoint: " + endpoint);
+        }
+    }
+
+    @When("verify {string} via POST to {string}")
+    public void verifyViaPOSTTo(String password, String endpoint) {
+        if (endpoint.contains("verifyLogin")) {
+            response = ApiActions.postToVerifyLogin(password);
+        } else {
+            throw new IllegalArgumentException("Unsupported endpoint: " + endpoint);
+        }
+    }
+
+    @When("user does DELETE cal to {string} endpoint")
+    public void userDoesDELETECalToEndpoint(String endpoint) {
+        if (endpoint.contains("verifyLogin")) {
+            response = ApiActions.deleteToVerifyLogin();
+        } else {
+            throw new IllegalArgumentException("Unsupported endpoint: " + endpoint);
+        }
+    }
 }

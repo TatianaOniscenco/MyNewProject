@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true) // Ignore unexpected fields at the top level
-public class ProductResponse {
+public class ProductListResponse {
 
     public List<Product> products;
 
