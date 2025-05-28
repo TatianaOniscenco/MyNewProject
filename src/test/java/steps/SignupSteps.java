@@ -20,11 +20,12 @@ public class SignupSteps {
     @When("User enters valid account information")
     public void enterValidUserInformation() {
 
+        String password = faker.internet().password();
 
         List<String> countries = List.of("India", "United States", "Canada", "Australia", "Israel", "New Zealand", "Singapore");
         String selectedCountry = countries.get(new Random().nextInt(countries.size()));
 
-        signupPage.enterPassword(faker.internet().password());
+        signupPage.enterPassword(password);
         signupPage.enterFirstName(faker.name().firstName());
         signupPage.enterLastName(faker.name().lastName());
         signupPage.enterAddress(faker.address().streetAddress());
@@ -33,6 +34,8 @@ public class SignupSteps {
         signupPage.enterCity(faker.address().city());
         signupPage.enterZipCode(faker.address().zipCode());
         signupPage.enterMobileNumber(faker.phoneNumber().phoneNumber());
+
+        Hooks.setPassword(password);
     }
 
     @And("User submits the signup form clicking on Create Account button")

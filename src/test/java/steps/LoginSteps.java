@@ -38,12 +38,15 @@ public class LoginSteps {
         String firstName = faker.name().firstName();
         String lastName = faker.name().lastName();
         String fullName = firstName + " " + lastName;
+        String email = faker.internet().emailAddress();
 
         Hooks.setFirstName(firstName);
         Hooks.setLastName(lastName);
 
         loginPage.enterSignupName(fullName);
-        loginPage.enterSignupEmail(faker.internet().emailAddress());
+        loginPage.enterSignupEmail(email);
+
+        Hooks.setEmail(email);
 
     }
 
@@ -56,6 +59,12 @@ public class LoginSteps {
     public void inputsExistingCredentialsInNewUserSignupForm(String email) {
         loginPage.enterSignupName(faker.name().fullName());
         loginPage.enterSignupEmail(email);
+    }
+
+    @And("User inputs recent valid credentials to login")
+    public void userInputsRecentValidCredentialsToLogin() {
+        loginPage.enterLoginEmail(Hooks.getEmail());
+        loginPage.enterLoginPassword(Hooks.getPassword());
     }
 
 

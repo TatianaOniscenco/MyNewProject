@@ -17,28 +17,34 @@ public class Hooks {
     private static final ThreadLocal<Page> threadLocalPage = new ThreadLocal<>();
     private static final ThreadLocal<String> threadLocalFirstName = new ThreadLocal<>();
     private static final ThreadLocal<String> threadLocalLastName = new ThreadLocal<>();
+    private static final ThreadLocal<String> threadLocalEmail = new ThreadLocal<>();
+    private static final ThreadLocal<String> threadLocalPassword = new ThreadLocal<>();
 
     private static final Logger log = LoggerFactory.getLogger(Hooks.class);
 
     public static void setFirstName(String firstName) {
         threadLocalFirstName.set(firstName);
     }
-
     public static void setLastName(String lastName) {
         threadLocalLastName.set(lastName);
     }
-
     public static String getFirstName() {
         return threadLocalFirstName.get();
     }
-
     public static String getLastName() {
         return threadLocalLastName.get();
     }
-
     public static String getFullName() {
         return getFirstName() + " " + getLastName();
     }
+    public static void setEmail(String email) {
+        threadLocalEmail.set(email);
+    }
+    public static void setPassword(String password) {
+        threadLocalPassword.set(password);
+    }
+    public static String getEmail() { return threadLocalEmail.get(); }
+    public static String getPassword() { return threadLocalPassword.get(); }
 
     // Global setup (runs once per test run)
     @BeforeAll

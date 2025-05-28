@@ -37,9 +37,9 @@ Background:
     And User is redirected to homepage
     When System displays username up in the header
     Then User clicks Logout button
-    #And User inputs "" and "" credentials
-    #And User submits the login form
-    #And User is redirected to homepage
-    #Then System displays "Logged in as fullname" up in the header
+    And User inputs recent valid credentials to login
+    And User submits the login form
+    And User is redirected to homepage
+    Then System displays username up in the header
 
 
