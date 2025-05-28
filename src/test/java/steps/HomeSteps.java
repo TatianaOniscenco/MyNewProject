@@ -46,6 +46,11 @@ public class HomeSteps {
 
     }
 
+    @When("User clicks Logout button")
+    public void userClicksLogoutButton() {
+        homePage.clickLogoutButton();
+    }
+
     //for newly created user
 
 }

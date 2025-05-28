@@ -20,6 +20,7 @@ public class HomePage {
     private final String contactUsLink = "[href='/contact_us']";
     private final String loggedInTextLocator = "li:has-text('Logged in as')";
     private final String deleteButton = "[href='/delete_account']";
+    private final String logoutButton = "[href='/logout']";
 
     public HomePage(Page page) {
         this.page = page;
@@ -70,5 +71,9 @@ public class HomePage {
     public Locator getLoggedInHeaderLocator() {
         System.out.println("Fullname: " + Hooks.getFullName());
         return page.getByText("Logged in as " + Hooks.getFullName());
+    }
+
+    public void clickLogoutButton() {
+        page.locator(logoutButton).click();
     }
 }
