@@ -2,8 +2,6 @@ package hooks;
 
 import com.microsoft.playwright.*;
 import io.cucumber.java.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import utils.LogUtil;
 
 import java.io.FileWriter;
@@ -42,16 +40,6 @@ public class Hooks {
         return threadLocalPage.get();
     }
 
-    @BeforeAll
-    public static void beforeAll() {
-        System.out.println(" [BeforeAll] Global test setup | Time: " + java.time.LocalTime.now());
-    }
-
-    @AfterAll
-    public static void afterAll() {
-        System.out.println(" [AfterAll] Global test teardown | Time: " + java.time.LocalTime.now());
-    }
-
     @Before
     public void beforeScenario(Scenario scenario) {
         this.featureName = scenario.getUri().toString().replaceAll(".*features/", "").replace(".feature", "");
@@ -78,7 +66,6 @@ public class Hooks {
     @After
     public void afterScenario(Scenario scenario) {
         String result = scenario.isFailed() ? "FAILED" : "PASSED";
-        String logMsg = (scenario.isFailed() ? "Test failed: " : "Test passed: ") + scenario.getName();
 
         logToFile(result + " - " + scenario.getName());
 

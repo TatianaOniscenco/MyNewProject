@@ -5,8 +5,6 @@ import hooks.Hooks;
 import io.cucumber.java.en.And;
 import pages.AccountCreatedPage;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 public class AccountCreatedSteps {
     Page page = Hooks.getPage();
     AccountCreatedPage accountCreatedPage = new AccountCreatedPage(page);
