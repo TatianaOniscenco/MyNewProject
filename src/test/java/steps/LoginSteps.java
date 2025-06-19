@@ -5,9 +5,10 @@ import hooks.Hooks;
 import io.cucumber.java.en.*;
 import net.datafaker.Faker;
 import pages.LoginPage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
-import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LoginSteps {
@@ -15,14 +16,18 @@ public class LoginSteps {
     LoginPage loginPage = new LoginPage(page);
     Faker faker = new Faker();
 
+    private static final Logger log = LoggerFactory.getLogger(LoginSteps.class);
+
 
     @Then("System displays the {string} message")
     public void systemDisplaysTheMessage(String message) {
+        Hooks.logToFile("Verifying message: " + message);
         assertTrue(loginPage.isErrorMessageVisible(message));
     }
 
     @When("User inputs {string} and {string} credentials")
     public void inputCredentials(String login, String password) {
+        Hooks.logToFile("Entering credentials: [" + login + " / " + password + "]");
         loginPage.enterLoginEmail(login);
         loginPage.enterLoginPassword(password);
     }
@@ -68,12 +73,7 @@ public class LoginSteps {
     }
 
 
-/**
-    @And("User clicks Delete account button")
-    public void userClicksDeleteAccountButton() {
-        loginPage.clickDeleteAccountButton();
-    }
-    **/
+
 }
 
 
