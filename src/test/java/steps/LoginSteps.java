@@ -15,7 +15,7 @@ public class LoginSteps {
 
     @Then("System displays the {string} message")
     public void systemDisplaysTheMessage(String message) {
-        Hooks.logToFile("[ASSERT] Verifying error/success message: \"" + message + "\"");
+        Hooks.logToFile("[ASSERT] Verifying error/success message: \"" + message + "\" is visible");
         assertTrue(loginPage.isErrorMessageVisible(message));
     }
 
