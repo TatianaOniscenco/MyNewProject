@@ -7,7 +7,7 @@ Background:
   Scenario: Login with incorrect email and password
     When User inputs "user@invalid.com" and "123456R" credentials
     And User submits the login form
-    Then System displays the "Your email or password is ncorrect!" message
+    Then System displays the "Your email or password is incorrect!" message
 
 
   @Positive

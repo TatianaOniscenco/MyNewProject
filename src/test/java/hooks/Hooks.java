@@ -28,8 +28,6 @@ public class Hooks {
     private static final ThreadLocal<String> threadLocalPassword = new ThreadLocal<>();
     private static final ThreadLocal<Path> threadLocalScenarioPath = new ThreadLocal<>();
 
-    private static final Logger log = LoggerFactory.getLogger(Hooks.class);
-
     public static void setFirstName(String firstName) { threadLocalFirstName.set(firstName); }
     public static void setLastName(String lastName) { threadLocalLastName.set(lastName); }
     public static String getFirstName() { return threadLocalFirstName.get(); }
@@ -66,7 +64,7 @@ public class Hooks {
         logToFile("START - " + scenario.getName());
 
         if (testType.equals("API")) {
-            System.out.println("🧪 API test — skipping browser setup.");
+            System.out.println("API test — skipping browser setup.");
             return;
         }
 
