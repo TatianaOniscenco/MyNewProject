@@ -4,31 +4,35 @@ import com.microsoft.playwright.Page;
 import hooks.Hooks;
 import io.cucumber.java.en.*;
 import net.datafaker.Faker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pages.LoginPage;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LoginSteps {
+    private static final Logger log = LoggerFactory.getLogger(LoginSteps.class);
+
     Page page = Hooks.getPage();
     LoginPage loginPage = new LoginPage(page);
     Faker faker = new Faker();
 
     @Then("System displays the {string} message")
     public void systemDisplaysTheMessage(String message) {
-        Hooks.logToFile("[ASSERT] Verifying error/success message: \"" + message + "\" is visible");
+        log.info("[ASSERT] Verifying error/success message: \"{}\" is visible", message);
         assertTrue(loginPage.isErrorMessageVisible(message));
     }
 
     @When("User inputs {string} and {string} credentials")
     public void inputCredentials(String login, String password) {
-        Hooks.logToFile("[ACTION] Inputting login credentials: email = " + login + ", password = " + password);
+        log.info("[ACTION] Inputting login credentials: email = {}, password = {}", login, password);
         loginPage.enterLoginEmail(login);
         loginPage.enterLoginPassword(password);
     }
 
     @And("User submits the login form")
     public void submitLoginForm() {
-        Hooks.logToFile("[ACTION] Clicking login button");
+        log.info("[ACTION] Clicking login button");
         loginPage.clickLoginButton();
     }
 
@@ -43,28 +47,28 @@ public class LoginSteps {
         Hooks.setLastName(lastName);
         Hooks.setEmail(email);
 
-        Hooks.logToFile("[DATA] Generated user for signup: " + fullName + " <" + email + ">");
+        log.info("[DATA] Generated user for signup: {} <{}>", fullName, email);
         loginPage.enterSignupName(fullName);
         loginPage.enterSignupEmail(email);
     }
 
     @And("User clicks on Signup button")
     public void clicksSignupButton() {
-        Hooks.logToFile("[ACTION] Clicking signup button");
+        log.info("[ACTION] Clicking signup button");
         loginPage.clickSignupButton();
     }
 
     @When("User inputs existing email {string} in New User Signup form")
     public void inputsExistingCredentialsInNewUserSignupForm(String email) {
         String name = faker.name().fullName();
-        Hooks.logToFile("[DATA] Inputting existing email: " + email + " with random name: " + name);
+        log.info("[DATA] Inputting existing email: {} with random name: {}", email, name);
         loginPage.enterSignupName(name);
         loginPage.enterSignupEmail(email);
     }
 
     @And("User inputs recent valid credentials to login")
     public void userInputsRecentValidCredentialsToLogin() {
-        Hooks.logToFile("[ACTION] Logging in with recent user: " + Hooks.getEmail());
+        log.info("[ACTION] Logging in with recent user: {}", Hooks.getEmail());
         loginPage.enterLoginEmail(Hooks.getEmail());
         loginPage.enterLoginPassword(Hooks.getPassword());
     }

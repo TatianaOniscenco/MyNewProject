@@ -2,10 +2,11 @@ package hooks;
 
 import com.microsoft.playwright.*;
 import io.cucumber.java.*;
-import utils.LogUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
+import utils.ScenarioPathBuilder;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.nio.file.Path;
 
 public class Hooks {
@@ -26,15 +27,43 @@ public class Hooks {
     private static final ThreadLocal<String> threadLocalPassword = new ThreadLocal<>();
     private static final ThreadLocal<Path> threadLocalScenarioPath = new ThreadLocal<>();
 
-    public static void setFirstName(String firstName) { threadLocalFirstName.set(firstName); }
-    public static void setLastName(String lastName) { threadLocalLastName.set(lastName); }
-    public static String getFirstName() { return threadLocalFirstName.get(); }
-    public static String getLastName() { return threadLocalLastName.get(); }
-    public static String getFullName() { return getFirstName() + " " + getLastName(); }
-    public static void setEmail(String email) { threadLocalEmail.set(email); }
-    public static void setPassword(String password) { threadLocalPassword.set(password); }
-    public static String getEmail() { return threadLocalEmail.get(); }
-    public static String getPassword() { return threadLocalPassword.get(); }
+    private static final Logger log = LoggerFactory.getLogger(Hooks.class);
+
+    public static void setFirstName(String firstName) {
+        threadLocalFirstName.set(firstName);
+    }
+
+    public static void setLastName(String lastName) {
+        threadLocalLastName.set(lastName);
+    }
+
+    public static String getFirstName() {
+        return threadLocalFirstName.get();
+    }
+
+    public static String getLastName() {
+        return threadLocalLastName.get();
+    }
+
+    public static String getFullName() {
+        return getFirstName() + " " + getLastName();
+    }
+
+    public static void setEmail(String email) {
+        threadLocalEmail.set(email);
+    }
+
+    public static void setPassword(String password) {
+        threadLocalPassword.set(password);
+    }
+
+    public static String getEmail() {
+        return threadLocalEmail.get();
+    }
+
+    public static String getPassword() {
+        return threadLocalPassword.get();
+    }
 
     public static Page getPage() {
         return threadLocalPage.get();
@@ -46,13 +75,16 @@ public class Hooks {
         this.scenarioName = scenario.getName();
         this.testType = scenario.getSourceTagNames().contains("@API") ? "API" : "UI";
 
-        scenarioPath = LogUtil.getScenarioFolder(testType, featureName, scenarioName);
+        scenarioPath = ScenarioPathBuilder.getScenarioFolder(testType, featureName, scenarioName);
         threadLocalScenarioPath.set(scenarioPath);
 
-        logToFile("START - " + scenario.getName());
+        String fullPath = scenarioPath.resolve("log.txt").toString();
+        MDC.put("scenarioLogPath", fullPath);
+
+        log.info("START - {}", scenario.getName());
 
         if (testType.equals("API")) {
-            System.out.println("API test — skipping browser setup.");
+            log.info("API test — skipping browser setup.");
             return;
         }
 
@@ -67,14 +99,15 @@ public class Hooks {
     public void afterScenario(Scenario scenario) {
         String result = scenario.isFailed() ? "FAILED" : "PASSED";
 
-        logToFile(result + " - " + scenario.getName());
+        log.info("{} - {}", result, scenario.getName());
 
         if (!testType.equals("API") && page != null) {
             Path screenshotPath = threadLocalScenarioPath.get().resolve(result + ".png");
             page.screenshot(new Page.ScreenshotOptions().setPath(screenshotPath));
+            log.info("Screenshot saved: {}", screenshotPath);
         }
 
-        logToFile("END - " + scenario.getName());
+        log.info("END - {}", scenario.getName());
 
         if (context != null) context.close();
         if (browser != null) browser.close();
@@ -82,20 +115,7 @@ public class Hooks {
 
         threadLocalPage.remove();
         threadLocalScenarioPath.remove();
-    }
-
-    public static void logToFile(String message) {
-        Path scenarioPath = threadLocalScenarioPath.get(); // <-- use thread-safe instance
-        if (scenarioPath == null) return;
-
-        try {
-            Path logFile = scenarioPath.resolve("log.txt");
-            FileWriter writer = new FileWriter(logFile.toFile(), true);
-            writer.write("[" + java.time.LocalTime.now() + "] " + message + "\n");
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        MDC.clear(); // Important to isolate logs between scenarios
     }
 }
 

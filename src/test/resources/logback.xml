@@ -1,23 +1,40 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n</pattern>
+            <pattern>%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>target/logs/global-execution.log</file>
+    <appender name="GLOBAL_FILE" class="ch.qos.logback.core.FileAppender">
+        <file>target/logs/execution.log</file>
         <append>true</append>
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level [%logger{36}] - %msg%n</pattern>
         </encoder>
+    </appender>
+
+    <!-- ✅ Delays log file creation until MDC[scenarioName] is set -->
+    <appender name="PER_SCENARIO" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <discriminator>
+            <key>scenarioLogPath</key>
+            <defaultValue>target/logs/undefined-scenario/log.txt</defaultValue>
+        </discriminator>
+        <sift>
+            <appender name="SCENARIO-${scenarioLogPath}" class="ch.qos.logback.core.FileAppender">
+                <file>${scenarioLogPath}</file>
+                <append>true</append>
+                <encoder>
+                    <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level [%logger{36}] - %msg%n</pattern>
+                </encoder>
+            </appender>
+        </sift>
     </appender>
 
     <root level="info">
         <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="FILE"/>
+        <appender-ref ref="GLOBAL_FILE"/>
+        <appender-ref ref="PER_SCENARIO"/>
     </root>
 
 </configuration>

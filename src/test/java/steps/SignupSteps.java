@@ -4,6 +4,8 @@ import com.microsoft.playwright.Page;
 import hooks.Hooks;
 import io.cucumber.java.en.*;
 import net.datafaker.Faker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pages.SignupPage;
 
 import java.util.List;
@@ -12,6 +14,8 @@ import java.util.Random;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SignupSteps {
+    private static final Logger log = LoggerFactory.getLogger(SignupSteps.class);
+
     Page page = Hooks.getPage();
     SignupPage signupPage = new SignupPage(page);
     Faker faker = new Faker();
@@ -30,15 +34,15 @@ public class SignupSteps {
         String zipCode = faker.address().zipCode();
         String phoneNumber = faker.phoneNumber().phoneNumber();
 
-        Hooks.logToFile("[DATA] First Name: " + firstName);
-        Hooks.logToFile("[DATA] Last Name: " + lastName);
-        Hooks.logToFile("[DATA] Address: " + address);
-        Hooks.logToFile("[DATA] Country: " + selectedCountry);
-        Hooks.logToFile("[DATA] State: " + state);
-        Hooks.logToFile("[DATA] City: " + city);
-        Hooks.logToFile("[DATA] Zip Code: " + zipCode);
-        Hooks.logToFile("[DATA] Phone Number: " + phoneNumber);
-        Hooks.logToFile("[DATA] Generated Password: " + password);
+        log.info("[DATA] First Name: {}", firstName);
+        log.info("[DATA] Last Name: {}", lastName);
+        log.info("[DATA] Address: {}", address);
+        log.info("[DATA] Country: {}", selectedCountry);
+        log.info("[DATA] State: {}", state);
+        log.info("[DATA] City: {}", city);
+        log.info("[DATA] Zip Code: {}", zipCode);
+        log.info("[DATA] Phone Number: {}", phoneNumber);
+        log.info("[DATA] Generated Password: {}", password);
 
         signupPage.enterPassword(password);
         signupPage.enterFirstName(firstName);
@@ -55,13 +59,13 @@ public class SignupSteps {
 
     @And("User submits the signup form clicking on Create Account button")
     public void submitSignupForm() {
-        Hooks.logToFile("[ACTION] Clicking 'Create Account' button");
+        log.info("[ACTION] Clicking 'Create Account' button");
         signupPage.clickCreateAccountButton();
     }
 
     @And("user is redirected to Signup page")
     public void isRedirectedToSignupPage() {
-        Hooks.logToFile("[ASSERT] Checking visibility of 'Enter Account Information' section");
+        log.info("[ASSERT] Checking visibility of 'Enter Account Information' section");
         assertTrue(signupPage.isEnterAccountInfoVisible());
     }
 }
