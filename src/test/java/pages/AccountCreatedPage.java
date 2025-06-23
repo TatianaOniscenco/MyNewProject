@@ -11,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class AccountCreatedPage {
     private final Page page;
     private final String continueButton = "[data-qa='continue-button']";
-    private final String accountCreated = "[href='/account_created']";
 
 
     public AccountCreatedPage(Page page) {
@@ -35,7 +34,7 @@ public class AccountCreatedPage {
 
         } catch (PlaywrightException e) {
             page.screenshot(new Page.ScreenshotOptions().setPath(Paths.get("account_created_error_" + System.currentTimeMillis() + ".png")));
-            throw new AssertionError("❌ Failed to confirm Account Created page", e);
+            throw new AssertionError("Failed to confirm Account Created page", e);
         }
 
     }

@@ -30,8 +30,7 @@ public class HomeSteps {
 
     @And("User is redirected to homepage")
     public void isRedirectedToHomepage() {
-        log.info("[ASSERT] Checking homepage is visible");
-        homePage.isVisible();
+        homePage.assertRedirectedToHomeUrl();
     }
 
     @And("System displays {string} up in the header")

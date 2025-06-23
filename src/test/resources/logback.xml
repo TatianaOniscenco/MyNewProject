@@ -14,7 +14,7 @@
         </encoder>
     </appender>
 
-    <!-- ✅ Delays log file creation until MDC[scenarioName] is set -->
+    <!--  Delays log file creation until MDC[scenarioName] is set -->
     <appender name="PER_SCENARIO" class="ch.qos.logback.classic.sift.SiftingAppender">
         <discriminator>
             <key>scenarioLogPath</key>

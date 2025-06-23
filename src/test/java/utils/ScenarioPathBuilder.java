@@ -15,7 +15,7 @@ public class ScenarioPathBuilder {
     private static final String RUN_TIMESTAMP = LocalTime.now().format(DateTimeFormatter.ofPattern("HH_mm_ss"));
 
 
-    public static Path getScenarioFolder(String testType, String featureName, String scenarioName) {
+    public static Path getScenarioFolder(String testType, String scenarioName) {
         Path path = Paths.get(ROOT_DIR, DATE, testType, RUN_TIMESTAMP, sanitize(scenarioName));
         new File(path.toString()).mkdirs();
         return path;

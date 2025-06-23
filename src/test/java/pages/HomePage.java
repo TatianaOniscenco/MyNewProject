@@ -3,14 +3,17 @@ package pages;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.WaitUntilState;
+import com.microsoft.playwright.options.WaitForSelectorState;
+import config.ConfigReader;
 import hooks.Hooks;
+
+import static com.microsoft.playwright.Locator.*;
 
 public class HomePage {
 
     private final Page page;
 
     // Selectors
-    private final String homePageLink = "[href='https://www.automationexercise.com/']";
     private final String signupLoginLink = "[href='/login']";
     private final String productsLink = "[href='/products']";
     private final String cartLink = "[href='/view_cart']";
@@ -27,9 +30,9 @@ public class HomePage {
     }
 
     public void openHomePage() {
-        page.navigate("https://www.automationexercise.com",
-                new Page.NavigateOptions().setWaitUntil(WaitUntilState.DOMCONTENTLOADED));
-        page.waitForSelector("[href='/login']");
+        String url = ConfigReader.get("base.url");
+        page.navigate(url, new Page.NavigateOptions().setWaitUntil(WaitUntilState.DOMCONTENTLOADED));
+        page.waitForSelector(signupLoginLink); // optional: wait for known element
     }
 
     public void goToLoginPage() {
@@ -59,8 +62,13 @@ public class HomePage {
         page.locator(contactUsLink).click();
     }
 
-    public void isVisible() {
-        page.locator(homePageLink).isVisible();
+    public void assertRedirectedToHomeUrl() {
+        String expectedUrl = ConfigReader.get("base.url").replaceAll("/+$", ""); // remove trailing slash
+        String actualUrl = page.url().replaceAll("/+$", ""); // remove trailing slash
+
+        if (!actualUrl.equals(expectedUrl)) {
+            throw new AssertionError("Expected to be at: " + expectedUrl + " but was: " + actualUrl);
+        }
     }
 
     public void clickDeleteButton() {

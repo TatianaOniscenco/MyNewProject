@@ -4,8 +4,6 @@ Feature: Add products to the cart
   Scenario Outline: Add one product to the cart and verify cart details
     Given User is on Products page
     When adds "<productName>" product to the cart
-    #And chooses to continue shopping
-    #And adds "<productName>" product to the cart
     And user views the cart
     Then selected "<productName>" is visible in the cart
     And cart displays correct price "<productPrice>" and quantity
