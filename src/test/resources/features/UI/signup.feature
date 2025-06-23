@@ -1,3 +1,4 @@
+@UI
 Feature: User signup
 Background:
   Given Homepage is loaded
@@ -24,7 +25,7 @@ Background:
     And User clicks on Signup button
     Then System displays the "Email Address already exist!" message
 
-  @Positive @Only
+  @Positive
   Scenario: Successful user login after signup
     And User inputs new valid credentials in New User Signup form
     And User clicks on Signup button

@@ -1,3 +1,4 @@
+@UI
 Feature: User login
 Background:
   Given Homepage is loaded

@@ -1,3 +1,4 @@
+@UI
 Feature: Add products to the cart
 
   @Positive
