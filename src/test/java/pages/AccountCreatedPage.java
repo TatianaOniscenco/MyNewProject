@@ -3,6 +3,7 @@ package pages;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.PlaywrightException;
+import com.microsoft.playwright.options.LoadState;
 
 import java.nio.file.Paths;
 
@@ -18,8 +19,10 @@ public class AccountCreatedPage {
     }
 
     public void clickContinueButton() {
-        page.waitForNavigation(() -> page.locator(continueButton).click());
-        page.waitForTimeout(1000); // just 1 second for realism
+        page.locator(continueButton).click(new Locator.ClickOptions()
+                .setTimeout(1000));
+
+        page.waitForLoadState(LoadState.DOMCONTENTLOADED);
     }
 
     public void isVisible() {

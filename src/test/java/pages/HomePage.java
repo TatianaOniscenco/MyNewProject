@@ -3,11 +3,8 @@ package pages;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.WaitUntilState;
-import com.microsoft.playwright.options.WaitForSelectorState;
 import config.ConfigReader;
 import hooks.Hooks;
-
-import static com.microsoft.playwright.Locator.*;
 
 public class HomePage {
 
