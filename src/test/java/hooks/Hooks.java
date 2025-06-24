@@ -67,8 +67,6 @@ public class Hooks {
         return threadLocalPage.get();
     }
 
-    // ------------------ Scenario Lifecycle ------------------
-
     @Before
     public void beforeScenario(Scenario scenario) {
         this.featureName = scenario.getUri().toString().replaceAll(".*features/", "").replace(".feature", "");

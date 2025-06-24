@@ -29,7 +29,6 @@ public class LoginPage {
         page.locator(loginButton).click();
     }
 
-    // --- Registration section ---
     public void enterSignupName(String name) {
         page.locator(signupNameField).fill(name);
     }
@@ -42,7 +41,6 @@ public class LoginPage {
         page.locator(signupButton).click();
     }
 
-    // --- Assertion helper ---
     public boolean isErrorMessageVisible(String message) {
         return page.locator("text=" + message).isVisible();
     }

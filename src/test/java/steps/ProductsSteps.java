@@ -1,6 +1,7 @@
 package steps;
 
 import com.microsoft.playwright.Page;
+import config.ConfigReader;
 import hooks.Hooks;
 import io.cucumber.java.en.*;
 import org.slf4j.Logger;
@@ -16,7 +17,8 @@ public class ProductsSteps {
     @Given("User is on Products page")
     public void isOnProductsPage() {
         log.info("[ACTION] Navigating to Products page");
-        page.navigate("https://automationexercise.com/products");
+        String url = ConfigReader.get("base.url") + "/products";
+        page.navigate(url);
         page.waitForLoadState();
     }
 

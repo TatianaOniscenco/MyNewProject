@@ -4,9 +4,6 @@ import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.PlaywrightException;
 import com.microsoft.playwright.options.LoadState;
-
-import java.nio.file.Paths;
-
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AccountCreatedPage {
@@ -36,7 +33,6 @@ public class AccountCreatedPage {
             assertTrue(page.url().contains("/account_created"), "Unexpected URL: " + page.url());
 
         } catch (PlaywrightException e) {
-            page.screenshot(new Page.ScreenshotOptions().setPath(Paths.get("account_created_error_" + System.currentTimeMillis() + ".png")));
             throw new AssertionError("Failed to confirm Account Created page", e);
         }
 

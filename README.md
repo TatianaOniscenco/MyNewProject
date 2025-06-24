@@ -1,6 +1,5 @@
 MyNewProject - Automated Testing Framework (ATF) to test https://automationexercise.com
 
-
 TECH STACK
 
 Java 24
@@ -27,12 +26,12 @@ browser=chromium
 headless=true
 
 RUN TESTS
+
 To run all tests:
 Run CucumberTestRunner class
 
 To run only specific tagged tests:
 In junit-platform.properties specify needed tags to run - cucumber.filter.tags=@Only
-
 @Positive, @Negative - test result types
 @UI, @API - test layer
 @Only - for focused runs
@@ -40,8 +39,8 @@ In junit-platform.properties specify needed tags to run - cucumber.filter.tags=@
 NOTES
 Page Object Model is used for maintainable UI automation.
 Configurable browser and headless mode.
-Logs and a screenshot saved on every test: Passed or Failed, for evidence.
-
+Logs and a screenshot saved on every test: Passed or Failed.
+Cucumber HTML report available.
 API tests supported with RestAssured.
 
 AUTHOR
