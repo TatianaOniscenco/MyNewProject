@@ -11,33 +11,33 @@ public class PlaywrightFactory {
     private static final ThreadLocal<Page> page = new ThreadLocal<>();
 
     public static void initBrowser() {
-        // Read browser name and headless mode from config.properties
-        String browserName = ConfigReader.get("browser");
+        // Convert browser config value to enum
+        BrowserName browserType = BrowserName.fromString(ConfigReader.get("browser"));
         boolean isHeadless = Boolean.parseBoolean(ConfigReader.get("headless"));
 
         // Create a new Playwright instance
         playwright.set(Playwright.create());
 
-        // Set launch options
-        BrowserType.LaunchOptions options = new BrowserType.LaunchOptions()
-                .setHeadless(isHeadless);
+        // Set browser launch options
+        com.microsoft.playwright.BrowserType.LaunchOptions options =
+                new com.microsoft.playwright.BrowserType.LaunchOptions()
+                        .setHeadless(isHeadless);
 
-        // Launch the specified browser
-        switch (browserName.toLowerCase()) {
-            case "firefox":
+        // Launch the specified browser using enum
+        switch (browserType) {
+            case FIREFOX:
                 browser.set(playwright.get().firefox().launch(options));
                 break;
-            case "webkit":
+            case WEBKIT:
                 browser.set(playwright.get().webkit().launch(options));
                 break;
-            case "chromium":
-            case "chrome": // accepted alias
+            case CHROMIUM:
             default:
                 browser.set(playwright.get().chromium().launch(options));
                 break;
         }
 
-        // Create browser context and page
+        // Create a context and page
         context.set(browser.get().newContext());
         page.set(context.get().newPage());
     }
@@ -46,6 +46,12 @@ public class PlaywrightFactory {
         return page.get();
     }
 
+
+    // might need to:
+    //Get cookies: getContext().cookies();
+    //Set storage state: getContext().addCookies(...);
+    //Save/restore session: getContext().storageState();
+    //Trace/debug: getContext().tracing().start(...);
     public static BrowserContext getContext() {
         return context.get();
     }
@@ -56,7 +62,6 @@ public class PlaywrightFactory {
         if (browser.get() != null) browser.get().close();
         if (playwright.get() != null) playwright.get().close();
 
-        // Remove thread-local instances
         page.remove();
         context.remove();
         browser.remove();

@@ -37,11 +37,15 @@ In junit-platform.properties specify needed tags to run - cucumber.filter.tags=@
 @Only - for focused runs
 
 NOTES
-Page Object Model is used for maintainable UI automation.
-Configurable browser and headless mode.
-Logs and a screenshot saved on every test: Passed or Failed.
-Cucumber HTML report available.
-API tests supported with RestAssured.
+
+Dual layer testing (UI + API)
+Page Object Model for UI
+Parallel test execution
+Dynamic test tagging with @UI, @API, etc.
+Configurable setup (config.properties)
+Automatic logging and screenshots
+Randomized user data with DataFaker
+HTML reports via Cucumber
 
 AUTHOR
 Tatiana Oniscenco

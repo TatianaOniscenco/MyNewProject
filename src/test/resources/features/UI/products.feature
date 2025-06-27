@@ -1,5 +1,5 @@
 @UI
-Feature: Add products to the cart
+Feature: UI: Add products to the cart
 
   @Positive
   Scenario Outline: Add one product to the cart and verify cart details

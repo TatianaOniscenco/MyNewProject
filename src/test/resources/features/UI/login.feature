@@ -1,6 +1,7 @@
 @UI
-Feature: User login
-Background:
+Feature: UI: User login
+
+Background: User is on login page
   Given Homepage is loaded
   And User navigates to login page
 
@@ -9,7 +10,6 @@ Background:
     When User inputs "user@invalid.com" and "123456R" credentials
     And User submits the login form
     Then System displays the "Your email or password is incorrect!" message
-
 
   @Positive
   Scenario: Login with correct email and password

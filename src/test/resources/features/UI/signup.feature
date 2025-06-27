@@ -1,6 +1,7 @@
 @UI
-Feature: User signup
-Background:
+Feature: UI: User signup
+
+Background: User is on login page
   Given Homepage is loaded
   And User navigates to login page
 
