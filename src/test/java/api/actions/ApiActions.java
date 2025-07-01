@@ -58,63 +58,11 @@ public class ApiActions {
         }
     }
 
-    public static Response getAllProducts() {
-        return given()
-                .log().all()
-                .when()
-                .get(baseUrl + PRODUCTS_LIST.getPath())
-                .then()
-                .log().body()
-                .extract().response();
-    }
-
-    public static Response getAllBrands() {
-        return given()
-                .log().all()
-                .when()
-                .get(baseUrl + BRANDS_LIST.getPath())
-                .then()
-                .log().body()
-                .extract().response();
-    }
-
-    public static Response postToProductsList() {
-        return given()
-                .log().all()
-                .when()
-                .post(baseUrl + PRODUCTS_LIST.getPath())
-                .then()
-                .log().body()
-                .extract().response();
-    }
-
-    public static Response putAllBrands() {
-        return given()
-                .log().all()
-                .when()
-                .put(baseUrl + BRANDS_LIST.getPath())
-                .then()
-                .log().body()
-                .extract().response();
-    }
-
     public static Response postToSearchProduct(String productName) {
         return given()
                 .log().all()
                 .contentType("application/x-www-form-urlencoded")
                 .formParam("search_product", productName)
-                .when()
-                .post(baseUrl + SEARCH_PRODUCT.getPath())
-                .then()
-                .log().body()
-                .extract()
-                .response();
-    }
-
-    public static Response postToSearchProduct() {
-        return given()
-                .log().all()
-                .contentType("application/x-www-form-urlencoded")
                 .when()
                 .post(baseUrl + SEARCH_PRODUCT.getPath())
                 .then()
@@ -144,18 +92,6 @@ public class ApiActions {
                 .formParam("password", password)
                 .when()
                 .post(baseUrl + VERIFY_LOGIN.getPath())
-                .then()
-                .log().body()
-                .extract()
-                .response();
-    }
-
-    public static Response deleteToVerifyLogin() {
-        return given()
-                .log().all()
-                .contentType("application/x-www-form-urlencoded")
-                .when()
-                .delete(baseUrl + VERIFY_LOGIN.getPath())
                 .then()
                 .log().body()
                 .extract()
