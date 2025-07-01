@@ -4,17 +4,17 @@ import config.ConfigReader;
 import io.restassured.response.Response;
 import static ENUM.ApiEndpoint.*;
 import static io.restassured.RestAssured.*;
+import enums.HttpMethod;
 
 public class ApiActions {
 
     private static final String baseUrl = ConfigReader.get("base.url");
 
-    public static Response sendRequest(ApiEndpoint endpoint, String method) {
+    public static Response sendRequest(ApiEndpoint endpoint, HttpMethod method) {
         String url = ConfigReader.get("base.url") + endpoint.getPath();
-        method = method.toUpperCase();
 
         switch (method) {
-            case "GET":
+            case GET:
                 return given()
                         .log().all()
                         .when()
@@ -23,7 +23,7 @@ public class ApiActions {
                         .log().body()
                         .extract().response();
 
-            case "POST":
+            case POST:
                 return given()
                         .log().all()
                         .contentType("application/x-www-form-urlencoded")
@@ -33,22 +33,22 @@ public class ApiActions {
                         .log().body()
                         .extract().response();
 
-            case "DELETE":
-                return given()
-                        .log().all()
-                        .contentType("application/x-www-form-urlencoded")
-                        .when()
-                        .delete(url)
-                        .then()
-                        .log().body()
-                        .extract().response();
-
-            case "PUT":
+            case PUT:
                 return given()
                         .log().all()
                         .contentType("application/x-www-form-urlencoded")
                         .when()
                         .put(url)
+                        .then()
+                        .log().body()
+                        .extract().response();
+
+            case DELETE:
+                return given()
+                        .log().all()
+                        .contentType("application/x-www-form-urlencoded")
+                        .when()
+                        .delete(url)
                         .then()
                         .log().body()
                         .extract().response();

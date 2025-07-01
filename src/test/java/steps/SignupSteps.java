@@ -7,9 +7,7 @@ import net.datafaker.Faker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pages.SignupPage;
-
-import java.util.List;
-import java.util.Random;
+import enums.SignupCountry;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -23,8 +21,7 @@ public class SignupSteps {
     @When("User enters valid account information")
     public void enterValidUserInformation() {
         String password = faker.internet().password();
-        List<String> countries = List.of("India", "United States", "Canada", "Australia", "Israel", "New Zealand", "Singapore");
-        String selectedCountry = countries.get(new Random().nextInt(countries.size()));
+        SignupCountry selectedCountry = SignupCountry.getRandom();
 
         String firstName = faker.name().firstName();
         String lastName = faker.name().lastName();
@@ -37,7 +34,7 @@ public class SignupSteps {
         log.info("[DATA] First Name: {}", firstName);
         log.info("[DATA] Last Name: {}", lastName);
         log.info("[DATA] Address: {}", address);
-        log.info("[DATA] Country: {}", selectedCountry);
+        log.info("[DATA] Country: {}", selectedCountry.getLabel());
         log.info("[DATA] State: {}", state);
         log.info("[DATA] City: {}", city);
         log.info("[DATA] Zip Code: {}", zipCode);
@@ -48,7 +45,7 @@ public class SignupSteps {
         signupPage.enterFirstName(firstName);
         signupPage.enterLastName(lastName);
         signupPage.enterAddress(address);
-        signupPage.selectCountry(selectedCountry);
+        signupPage.selectCountry(selectedCountry.getLabel());
         signupPage.enterState(state);
         signupPage.enterCity(city);
         signupPage.enterZipCode(zipCode);
