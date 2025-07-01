@@ -9,7 +9,7 @@ import org.slf4j.MDC;
 import utils.ScenarioPathBuilder;
 
 import java.nio.file.Path;
-
+// This file contains the setup and teardown logic for Cucumber scenarios, including Playwright integration and thread-local storage for user data.
 public class Hooks {
     private Path scenarioPath;
     private String featureName;

@@ -1,15 +1,15 @@
 package steps;
 
+import ENUM.ApiEndpoint;
 import api.actions.ApiActions;
 import api.dtos.responses.ProductListResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import config.ConfigReader;
 import io.cucumber.java.en.*;
 import io.restassured.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class APISteps {
@@ -97,14 +97,10 @@ public class APISteps {
         }
     }
 
-    @When("User searches for {string} via POST to {string}")
-    public void postSearchWithProduct(String productName, String endpoint) {
-        log.info("[API][POST] Searching for product: {} | Endpoint: {}", productName, endpoint);
-        if (endpoint.contains("searchProduct")) {
-            response = ApiActions.postToSearchProduct(productName);
-        } else {
-            throw new IllegalArgumentException("Unsupported endpoint: " + endpoint);
-        }
+    @When("User searches for {string} via POST to SEARCH_PRODUCT endpoint")
+    public void searchProduct(String productName) {
+        log.info("[API][POST] Searching for product: {}", productName);
+        response = ApiActions.postToSearchProduct(productName);
     }
 
     @And("Response contains searched products list")
@@ -122,33 +118,25 @@ public class APISteps {
                 .forEach(product -> log.info(" - {}", product));
     }
 
-    @When("verify {string} and {string} via POST to {string}")
-    public void verifyAndViaPOSTTo(String email, String password, String endpoint) {
-        log.info("[API][POST] Verifying login with email: {} | Endpoint: {}", email, endpoint);
-        if (endpoint.contains("verifyLogin")) {
-            response = ApiActions.postToVerifyLogin(email, password);
-        } else {
-            throw new IllegalArgumentException("Unsupported endpoint: " + endpoint);
-        }
+    @When("verify login with {string} and {string}")
+    public void verifyLoginWithConfigValues(String emailKey, String passwordKey) {
+        String email = ConfigReader.get(emailKey.replace(" ", "."));
+        String password = ConfigReader.get(passwordKey.replace(" ", "."));
+        log.info("[API][POST] Verifying login with valid email and password from config: {}, {}", email, password);
+        response = ApiActions.postToVerifyLogin(email, password);
     }
 
-    @When("verify {string} via POST to {string}")
-    public void verifyViaPOSTTo(String password, String endpoint) {
-        log.info("[API][POST] Verifying login with password only | Endpoint: {}", endpoint);
-        if (endpoint.contains("verifyLogin")) {
-            response = ApiActions.postToVerifyLogin(password);
-        } else {
-            throw new IllegalArgumentException("Unsupported endpoint: " + endpoint);
-        }
+    @When("verify login with only {string}")
+    public void verifyLoginWithOnlyPassword(String passwordKey) {
+        String password = ConfigReader.get(passwordKey.replace(" ", "."));
+        log.info("[API][POST] Verifying login with password only from config: {}", password);
+        response = ApiActions.postToVerifyLogin(password);
     }
 
-    @When("user does DELETE cal to {string} endpoint")
-    public void userDoesDELETECalToEndpoint(String endpoint) {
-        log.info("[API][DELETE] Endpoint: {}", endpoint);
-        if (endpoint.contains("verifyLogin")) {
-            response = ApiActions.deleteToVerifyLogin();
-        } else {
-            throw new IllegalArgumentException("Unsupported endpoint: " + endpoint);
-        }
+    @When("User sends {string} request to {string} endpoint")
+    public void userSendsRequestToEndpoint(String method, String endpointName) {
+        ApiEndpoint endpoint = ApiEndpoint.valueOf(endpointName.toUpperCase());
+        log.info("[API][{}] Sending request to: {}", method, endpoint);
+        response = ApiActions.sendRequest(endpoint, method);
     }
 }

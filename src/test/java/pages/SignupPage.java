@@ -1,7 +1,8 @@
 package pages;
 
 import com.microsoft.playwright.Page;
-
+// This class represents the Signup page functionalities in the application.
+// It provides methods to interact with the signup form elements and perform actions like filling the form and clicking the create account button.
 public class SignupPage {
     private final Page page;
 

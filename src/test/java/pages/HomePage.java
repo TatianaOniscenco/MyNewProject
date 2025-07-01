@@ -62,7 +62,6 @@ public class HomePage {
     public void assertRedirectedToHomeUrl() {
         String expectedUrl = ConfigReader.get("base.url").replaceAll("/+$", ""); // remove trailing slash
         String actualUrl = page.url().replaceAll("/+$", ""); // remove trailing slash
-
         if (!actualUrl.equals(expectedUrl)) {
             throw new AssertionError("Expected to be at: " + expectedUrl + " but was: " + actualUrl);
         }
@@ -71,7 +70,6 @@ public class HomePage {
     public void clickDeleteButton() {
         page.locator(deleteButton).click();
     }
-
 
     public Locator getLoggedInHeaderLocator() {
         System.out.println("Fullname: " + Hooks.getFullName());

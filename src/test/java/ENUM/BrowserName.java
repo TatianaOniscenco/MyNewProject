@@ -1,4 +1,4 @@
-package factory;
+package ENUM;
 
 public enum BrowserName {
     CHROMIUM,

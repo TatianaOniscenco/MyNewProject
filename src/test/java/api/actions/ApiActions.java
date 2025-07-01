@@ -1,19 +1,68 @@
 package api.actions;
-
+import ENUM.ApiEndpoint;
 import config.ConfigReader;
 import io.restassured.response.Response;
-
+import static ENUM.ApiEndpoint.*;
 import static io.restassured.RestAssured.*;
 
 public class ApiActions {
 
     private static final String baseUrl = ConfigReader.get("base.url");
 
+    public static Response sendRequest(ApiEndpoint endpoint, String method) {
+        String url = ConfigReader.get("base.url") + endpoint.getPath();
+        method = method.toUpperCase();
+
+        switch (method) {
+            case "GET":
+                return given()
+                        .log().all()
+                        .when()
+                        .get(url)
+                        .then()
+                        .log().body()
+                        .extract().response();
+
+            case "POST":
+                return given()
+                        .log().all()
+                        .contentType("application/x-www-form-urlencoded")
+                        .when()
+                        .post(url)
+                        .then()
+                        .log().body()
+                        .extract().response();
+
+            case "DELETE":
+                return given()
+                        .log().all()
+                        .contentType("application/x-www-form-urlencoded")
+                        .when()
+                        .delete(url)
+                        .then()
+                        .log().body()
+                        .extract().response();
+
+            case "PUT":
+                return given()
+                        .log().all()
+                        .contentType("application/x-www-form-urlencoded")
+                        .when()
+                        .put(url)
+                        .then()
+                        .log().body()
+                        .extract().response();
+
+            default:
+                throw new IllegalArgumentException("Unsupported HTTP method: " + method);
+        }
+    }
+
     public static Response getAllProducts() {
         return given()
                 .log().all()
                 .when()
-                .get(baseUrl + "/api/productsList")
+                .get(baseUrl + PRODUCTS_LIST.getPath())
                 .then()
                 .log().body()
                 .extract().response();
@@ -23,7 +72,7 @@ public class ApiActions {
         return given()
                 .log().all()
                 .when()
-                .get(baseUrl + "/api/brandsList")
+                .get(baseUrl + BRANDS_LIST.getPath())
                 .then()
                 .log().body()
                 .extract().response();
@@ -33,7 +82,7 @@ public class ApiActions {
         return given()
                 .log().all()
                 .when()
-                .post(baseUrl + "/api/productsList")
+                .post(baseUrl + PRODUCTS_LIST.getPath())
                 .then()
                 .log().body()
                 .extract().response();
@@ -43,7 +92,7 @@ public class ApiActions {
         return given()
                 .log().all()
                 .when()
-                .put(baseUrl + "/api/brandsList")
+                .put(baseUrl + BRANDS_LIST.getPath())
                 .then()
                 .log().body()
                 .extract().response();
@@ -55,7 +104,7 @@ public class ApiActions {
                 .contentType("application/x-www-form-urlencoded")
                 .formParam("search_product", productName)
                 .when()
-                .post(baseUrl + "/api/searchProduct")
+                .post(baseUrl + SEARCH_PRODUCT.getPath())
                 .then()
                 .log().body()
                 .extract()
@@ -67,7 +116,7 @@ public class ApiActions {
                 .log().all()
                 .contentType("application/x-www-form-urlencoded")
                 .when()
-                .post(baseUrl + "/api/searchProduct")
+                .post(baseUrl + SEARCH_PRODUCT.getPath())
                 .then()
                 .log().body()
                 .extract()
@@ -81,7 +130,7 @@ public class ApiActions {
                 .formParam("email", email)
                 .formParam("password", password)
                 .when()
-                .post(baseUrl + "/api/verifyLogin")
+                .post(baseUrl + VERIFY_LOGIN.getPath())
                 .then()
                 .log().body()
                 .extract()
@@ -94,7 +143,7 @@ public class ApiActions {
                 .contentType("application/x-www-form-urlencoded")
                 .formParam("password", password)
                 .when()
-                .post(baseUrl + "/api/verifyLogin")
+                .post(baseUrl + VERIFY_LOGIN.getPath())
                 .then()
                 .log().body()
                 .extract()
@@ -106,7 +155,7 @@ public class ApiActions {
                 .log().all()
                 .contentType("application/x-www-form-urlencoded")
                 .when()
-                .delete(baseUrl + "/api/verifyLogin")
+                .delete(baseUrl + VERIFY_LOGIN.getPath())
                 .then()
                 .log().body()
                 .extract()

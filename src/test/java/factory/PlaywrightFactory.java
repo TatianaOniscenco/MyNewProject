@@ -1,5 +1,6 @@
 package factory;
 
+import ENUM.BrowserName;
 import com.microsoft.playwright.*;
 import config.ConfigReader;
 

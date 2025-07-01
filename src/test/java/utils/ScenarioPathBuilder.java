@@ -6,7 +6,11 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-
+/**
+ * Utility class for building scenario-specific paths for test logs.
+ * It generates paths based on the current date, test type, and scenario name,
+ * ensuring that each scenario has a dedicated folder for its logs.
+ */
 public class ScenarioPathBuilder {
     private static final String ROOT_DIR = "target/logs";
     private static final String DATE = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
