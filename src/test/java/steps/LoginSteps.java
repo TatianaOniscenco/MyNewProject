@@ -1,6 +1,7 @@
 package steps;
 
 import com.microsoft.playwright.Page;
+import context.UserContext;
 import hooks.Hooks;
 import io.cucumber.java.en.*;
 import net.datafaker.Faker;
@@ -40,17 +41,19 @@ public class LoginSteps {
     public void inputsNewValidCredentialsInNewUserSignupForm() {
         String firstName = faker.name().firstName();
         String lastName = faker.name().lastName();
-        String fullName = firstName + " " + lastName;
         String email = faker.internet().emailAddress();
 
-        Hooks.setFirstName(firstName);
-        Hooks.setLastName(lastName);
-        Hooks.setEmail(email);
+        UserContext user = new UserContext();
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setEmail(email);
 
-        log.info("[DATA] Generated user for signup: {} <{}>", fullName, email);
-        loginPage.enterSignupName(fullName);
+        Hooks.setUserContext(user);  // ✅ store it in ThreadLocal
+
+        loginPage.enterSignupName(firstName + " " + lastName);
         loginPage.enterSignupEmail(email);
     }
+
 
     @And("User clicks on Signup button")
     public void clicksSignupButton() {
@@ -68,9 +71,10 @@ public class LoginSteps {
 
     @And("User inputs recent valid credentials to login")
     public void userInputsRecentValidCredentialsToLogin() {
-        log.info("[ACTION] Logging in with recent user: {}", Hooks.getEmail());
-        loginPage.enterLoginEmail(Hooks.getEmail());
-        loginPage.enterLoginPassword(Hooks.getPassword());
+        UserContext user = Hooks.getUserContext();
+        log.info("[ACTION] Logging in with recent user: {}", user.getEmail());
+        loginPage.enterLoginEmail(user.getEmail());
+        loginPage.enterLoginPassword(user.getPassword());
     }
 }
 

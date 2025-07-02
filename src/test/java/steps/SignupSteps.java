@@ -1,13 +1,14 @@
 package steps;
 
 import com.microsoft.playwright.Page;
+import context.UserContext;
+import enums.SignupCountry;
 import hooks.Hooks;
 import io.cucumber.java.en.*;
 import net.datafaker.Faker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pages.SignupPage;
-import enums.SignupCountry;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -20,30 +21,21 @@ public class SignupSteps {
 
     @When("User enters valid account information")
     public void enterValidUserInformation() {
-        String password = faker.internet().password();
-        SignupCountry selectedCountry = SignupCountry.getRandom();
+        UserContext userContext = Hooks.getUserContext();
 
-        String firstName = faker.name().firstName();
-        String lastName = faker.name().lastName();
+        // generate data
+        String password = faker.internet().password();
         String address = faker.address().streetAddress();
         String state = faker.address().state();
         String city = faker.address().city();
         String zipCode = faker.address().zipCode();
         String phoneNumber = faker.phoneNumber().phoneNumber();
+        SignupCountry selectedCountry = SignupCountry.getRandom();
 
-        log.info("[DATA] First Name: {}", firstName);
-        log.info("[DATA] Last Name: {}", lastName);
-        log.info("[DATA] Address: {}", address);
-        log.info("[DATA] Country: {}", selectedCountry.getLabel());
-        log.info("[DATA] State: {}", state);
-        log.info("[DATA] City: {}", city);
-        log.info("[DATA] Zip Code: {}", zipCode);
-        log.info("[DATA] Phone Number: {}", phoneNumber);
-        log.info("[DATA] Generated Password: {}", password);
-
+        // fill form
         signupPage.enterPassword(password);
-        signupPage.enterFirstName(firstName);
-        signupPage.enterLastName(lastName);
+        signupPage.enterFirstName(userContext.getFirstName());
+        signupPage.enterLastName(userContext.getLastName());
         signupPage.enterAddress(address);
         signupPage.selectCountry(selectedCountry.getLabel());
         signupPage.enterState(state);
@@ -51,7 +43,17 @@ public class SignupSteps {
         signupPage.enterZipCode(zipCode);
         signupPage.enterMobileNumber(phoneNumber);
 
-        Hooks.setPassword(password);
+        // update context
+        userContext.setPassword(password);
+        userContext.setAddress(address);
+        userContext.setCountry(selectedCountry.getLabel());
+        userContext.setState(state);
+        userContext.setCity(city);
+        userContext.setZipCode(zipCode);
+        userContext.setPhoneNumber(phoneNumber);
+
+        Hooks.setUserContext(userContext);
+        log.info("[DATA] Final UserContext: {}", userContext);
     }
 
     @And("User submits the signup form clicking on Create Account button")

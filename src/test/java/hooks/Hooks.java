@@ -1,6 +1,7 @@
 package hooks;
 
 import com.microsoft.playwright.Page;
+import context.UserContext;
 import factory.PlaywrightFactory;
 import io.cucumber.java.*;
 import org.slf4j.Logger;
@@ -9,7 +10,7 @@ import org.slf4j.MDC;
 import utils.ScenarioPathBuilder;
 
 import java.nio.file.Path;
-// This file contains the setup and teardown logic for Cucumber scenarios, including Playwright integration and thread-local storage for user data.
+
 public class Hooks {
     private Path scenarioPath;
     private String featureName;
@@ -17,54 +18,25 @@ public class Hooks {
     private String testType;
 
     private static final ThreadLocal<Page> threadLocalPage = new ThreadLocal<>();
-    private static final ThreadLocal<String> threadLocalFirstName = new ThreadLocal<>();
-    private static final ThreadLocal<String> threadLocalLastName = new ThreadLocal<>();
-    private static final ThreadLocal<String> threadLocalEmail = new ThreadLocal<>();
-    private static final ThreadLocal<String> threadLocalPassword = new ThreadLocal<>();
     private static final ThreadLocal<Path> threadLocalScenarioPath = new ThreadLocal<>();
+    private static final ThreadLocal<UserContext> threadLocalUserContext = new ThreadLocal<>();
 
     private static final Logger log = LoggerFactory.getLogger(Hooks.class);
 
-    // ------------------ User Info Getters/Setters ------------------
-
-    public static void setFirstName(String firstName) {
-        threadLocalFirstName.set(firstName);
-    }
-
-    public static void setLastName(String lastName) {
-        threadLocalLastName.set(lastName);
-    }
-
-    public static String getFirstName() {
-        return threadLocalFirstName.get();
-    }
-
-    public static String getLastName() {
-        return threadLocalLastName.get();
-    }
-
-    public static String getFullName() {
-        return getFirstName() + " " + getLastName();
-    }
-
-    public static void setEmail(String email) {
-        threadLocalEmail.set(email);
-    }
-
-    public static void setPassword(String password) {
-        threadLocalPassword.set(password);
-    }
-
-    public static String getEmail() {
-        return threadLocalEmail.get();
-    }
-
-    public static String getPassword() {
-        return threadLocalPassword.get();
-    }
-
     public static Page getPage() {
         return threadLocalPage.get();
+    }
+
+    public static Path getScenarioPath() {
+        return threadLocalScenarioPath.get();
+    }
+
+    public static UserContext getUserContext() {
+        return threadLocalUserContext.get();
+    }
+
+    public static void setUserContext(UserContext userContext) {
+        threadLocalUserContext.set(userContext);
     }
 
     @Before
@@ -86,7 +58,7 @@ public class Hooks {
             return;
         }
 
-        // Initialize Playwright using the factory
+        // Initialize browser for UI tests
         PlaywrightFactory.initBrowser();
         threadLocalPage.set(PlaywrightFactory.getPage());
     }
@@ -104,17 +76,12 @@ public class Hooks {
 
         log.info("END - {}", scenario.getName());
 
-        // Close browser resources
+        // Clean up
         PlaywrightFactory.close();
-
-        // Cleanup thread-local data
         threadLocalPage.remove();
-        threadLocalFirstName.remove();
-        threadLocalLastName.remove();
-        threadLocalEmail.remove();
-        threadLocalPassword.remove();
         threadLocalScenarioPath.remove();
-        MDC.clear(); // Reset logging context
+        threadLocalUserContext.remove();
+        MDC.clear();
     }
 }
 

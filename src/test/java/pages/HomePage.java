@@ -4,6 +4,7 @@ import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.WaitUntilState;
 import config.ConfigReader;
+import context.UserContext;
 import hooks.Hooks;
 
 public class HomePage {
@@ -26,10 +27,18 @@ public class HomePage {
         this.page = page;
     }
 
+    private UserContext getUserContext() {
+        UserContext context = Hooks.getUserContext();
+        if (context == null) {
+            throw new IllegalStateException("UserContext is null — it must be initialized before use.");
+        }
+        return context;
+    }
+
     public void openHomePage() {
         String url = ConfigReader.get("base.url");
         page.navigate(url, new Page.NavigateOptions().setWaitUntil(WaitUntilState.DOMCONTENTLOADED));
-        page.waitForSelector(signupLoginLink); // optional: wait for known element
+        page.waitForSelector(signupLoginLink);
     }
 
     public void goToLoginPage() {
@@ -43,25 +52,30 @@ public class HomePage {
     public void goToProductsPage() {
         page.locator(productsLink).click();
     }
+
     public void goToCartPage() {
         page.locator(cartLink).click();
     }
+
     public void goToTestCases() {
         page.locator(testCasesLink).click();
     }
+
     public void goToApiTesting() {
         page.locator(apiTestingLink).click();
     }
+
     public void goToVideoTutorials() {
         page.locator(videoTutorialsLink).click();
     }
+
     public void goToContactUs() {
         page.locator(contactUsLink).click();
     }
 
     public void assertRedirectedToHomeUrl() {
-        String expectedUrl = ConfigReader.get("base.url").replaceAll("/+$", ""); // remove trailing slash
-        String actualUrl = page.url().replaceAll("/+$", ""); // remove trailing slash
+        String expectedUrl = ConfigReader.get("base.url").replaceAll("/+$", "");
+        String actualUrl = page.url().replaceAll("/+$", "");
         if (!actualUrl.equals(expectedUrl)) {
             throw new AssertionError("Expected to be at: " + expectedUrl + " but was: " + actualUrl);
         }
@@ -71,12 +85,11 @@ public class HomePage {
         page.locator(deleteButton).click();
     }
 
-    public Locator getLoggedInHeaderLocator() {
-        System.out.println("Fullname: " + Hooks.getFullName());
-        return page.getByText("Logged in as " + Hooks.getFullName());
-    }
-
     public void clickLogoutButton() {
         page.locator(logoutButton).click();
+    }
+
+    public Locator getLoggedInHeaderLocator() {
+        return page.getByText("Logged in as " + getUserContext().getFullName());
     }
 }
