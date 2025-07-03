@@ -12,10 +12,10 @@ import pages.LoginPage;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LoginSteps {
-    private static final Logger log = LoggerFactory.getLogger(LoginSteps.class);
 
-    Page page = Hooks.getPage();
-    LoginPage loginPage = new LoginPage(page);
+    private static final Logger log = LoggerFactory.getLogger(LoginSteps.class);
+    private final Page page = Hooks.getPage();
+    private final LoginPage loginPage = new LoginPage(page);
     Faker faker = new Faker();
 
     @Then("System displays the {string} message")
@@ -31,7 +31,7 @@ public class LoginSteps {
         loginPage.enterLoginPassword(password);
     }
 
-    @And("User submits the login form")
+    @When("User submits the login form")
     public void submitLoginForm() {
         log.info("[ACTION] Clicking login button");
         loginPage.clickLoginButton();

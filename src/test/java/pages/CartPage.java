@@ -6,7 +6,7 @@ import com.microsoft.playwright.Page;
 public class CartPage {
     private final Page page;
 
-    // === Constants ===
+    // Constants
     private static final String CART_DESCRIPTION_LOCATOR = ".cart_description";
     private static final String CART_PRICE_LOCATOR = ".cart_price";
     private static final String CART_QUANTITY_LOCATOR = ".cart_quantity button";
@@ -16,12 +16,12 @@ public class CartPage {
     private static final String BREADCRUMB_CART = "ol.breadcrumb li.active:has-text(\"Shopping Cart\")";
 
 
-    // === Constructor ===
+    // Constructor
     public CartPage(Page page) {
         this.page = page;
     }
 
-    // === Actions & Assertions ===
+    // Actions
     public boolean isProductInCart(String productName) {
         return page.locator(CART_DESCRIPTION_LOCATOR)
                 .filter(new Locator.FilterOptions().setHasText(productName))
@@ -63,10 +63,11 @@ public class CartPage {
     public boolean isCartPageVisible() {
         try {
             return page.locator(BREADCRUMB_CART).isVisible()
-                    && page.url().contains("/view_cart");
+                    && page.url().contains(CART_PAGE_URL_FRAGMENT);
         } catch (Exception e) {
             return false;
         }
+
     }
 }
 

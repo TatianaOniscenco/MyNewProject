@@ -16,19 +16,19 @@ public class CartSteps {
     Page page = Hooks.getPage();
     CartPage cartPage = new CartPage(page);
 
-    @Then("selected {string} is visible in the cart")
+    @Then("Selected {string} is visible in the cart")
     public void areProductsVisible(String productName) {
         log.info("[ASSERT] Verifying product is in cart: {}", productName);
         assertTrue(cartPage.isProductInCart(productName), productName + " not found in cart");
     }
 
-    @And("cart displays correct price {string} and quantity")
+    @Then("Cart displays correct price {string} and quantity")
     public void verifyProductPriceAndQuantity(String expectedPrice) {
         log.info("[ASSERT] Verifying product price and quantity: Expected price = {}", expectedPrice);
         assertTrue(cartPage.isPriceAndQuantityCorrect(expectedPrice), "Price or quantity incorrect");
     }
 
-    @And("cart displays calculated total per product correctly")
+    @Then("Cart displays calculated total per product correctly")
     public void verifyProductTotalCalculation() {
         log.info("[ASSERT] Verifying total price per product is calculated correctly");
         assertTrue(cartPage.isTotalCorrect(), "Product total calculation is incorrect");
