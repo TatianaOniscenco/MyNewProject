@@ -106,5 +106,6 @@ public class APISteps {
         productListResponse.products.stream()
                 .limit(3)
                 .forEach(product -> log.info(" - {}", product));
+
     }
 }
