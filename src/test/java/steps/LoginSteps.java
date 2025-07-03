@@ -47,13 +47,11 @@ public class LoginSteps {
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setEmail(email);
-
-        Hooks.setUserContext(user);  // ✅ store it in ThreadLocal
+        Hooks.setUserContext(user);  // Store for later
 
         loginPage.enterSignupName(firstName + " " + lastName);
         loginPage.enterSignupEmail(email);
     }
-
 
     @And("User clicks on Signup button")
     public void clicksSignupButton() {

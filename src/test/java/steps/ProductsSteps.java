@@ -35,7 +35,7 @@ public class ProductsSteps {
         productsPage.clickContinueShopping();
     }
 
-    @And("user views the cart")
+    @And("user views the cart clicking on the button in the modal")
     public void viewTheCart() {
         log.info("[ACTION] Viewing the cart from modal");
         productsPage.clickViewCartFromModal();

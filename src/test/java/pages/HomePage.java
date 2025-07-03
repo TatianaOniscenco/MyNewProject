@@ -4,8 +4,6 @@ import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.WaitUntilState;
 import config.ConfigReader;
-import context.UserContext;
-import hooks.Hooks;
 
 public class HomePage {
 
@@ -25,14 +23,6 @@ public class HomePage {
 
     public HomePage(Page page) {
         this.page = page;
-    }
-
-    private UserContext getUserContext() {
-        UserContext context = Hooks.getUserContext();
-        if (context == null) {
-            throw new IllegalStateException("UserContext is null — it must be initialized before use.");
-        }
-        return context;
     }
 
     public void openHomePage() {
@@ -89,7 +79,7 @@ public class HomePage {
         page.locator(logoutButton).click();
     }
 
-    public Locator getLoggedInHeaderLocator() {
-        return page.getByText("Logged in as " + getUserContext().getFullName());
+    public Locator getLoggedInHeaderLocator(String fullName) {
+        return page.getByText("Logged in as " + fullName);
     }
 }

@@ -96,6 +96,10 @@ public class UserContext {
         this.phoneNumber = phoneNumber;
     }
 
+    public boolean isComplete() {
+        return firstName != null && lastName != null && email != null && password != null;
+    }
+
     @Override
     public String toString() {
         return "UserContext{" +

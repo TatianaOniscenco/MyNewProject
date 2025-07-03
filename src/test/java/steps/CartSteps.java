@@ -33,4 +33,10 @@ public class CartSteps {
         log.info("[ASSERT] Verifying total price per product is calculated correctly");
         assertTrue(cartPage.isTotalCorrect(), "Product total calculation is incorrect");
     }
+
+    @Then("User is redirected to Cart Page")
+    public void userIsRedirectedToCartPage() {
+        log.info("[ASSERT] Verifying user is on the Cart Page");
+        assertTrue(cartPage.isCartPageVisible(), "User is not on the Cart Page");
+    }
 }

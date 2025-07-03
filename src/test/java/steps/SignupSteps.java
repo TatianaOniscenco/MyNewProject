@@ -21,7 +21,7 @@ public class SignupSteps {
 
     @When("User enters valid account information")
     public void enterValidUserInformation() {
-        UserContext userContext = Hooks.getUserContext();
+        UserContext user = Hooks.getUserContext();
 
         // generate data
         String password = faker.internet().password();
@@ -34,8 +34,8 @@ public class SignupSteps {
 
         // fill form
         signupPage.enterPassword(password);
-        signupPage.enterFirstName(userContext.getFirstName());
-        signupPage.enterLastName(userContext.getLastName());
+        signupPage.enterFirstName(user.getFirstName());
+        signupPage.enterLastName(user.getLastName());
         signupPage.enterAddress(address);
         signupPage.selectCountry(selectedCountry.getLabel());
         signupPage.enterState(state);
@@ -44,16 +44,16 @@ public class SignupSteps {
         signupPage.enterMobileNumber(phoneNumber);
 
         // update context
-        userContext.setPassword(password);
-        userContext.setAddress(address);
-        userContext.setCountry(selectedCountry.getLabel());
-        userContext.setState(state);
-        userContext.setCity(city);
-        userContext.setZipCode(zipCode);
-        userContext.setPhoneNumber(phoneNumber);
+        user.setPassword(password);
+        user.setAddress(address);
+        user.setCountry(selectedCountry.getLabel());
+        user.setState(state);
+        user.setCity(city);
+        user.setZipCode(zipCode);
+        user.setPhoneNumber(phoneNumber);
+        Hooks.setUserContext(user);
 
-        Hooks.setUserContext(userContext);
-        log.info("[DATA] Final UserContext: {}", userContext);
+        log.info("[DATA] Final UserContext: {}", user);
     }
 
     @And("User submits the signup form clicking on Create Account button")
