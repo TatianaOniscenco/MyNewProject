@@ -2,7 +2,9 @@ package steps;
 
 import com.microsoft.playwright.Page;
 import config.ConfigReader;
-import hooks.Hooks;
+import context.ScenarioContext;
+import context.ScenarioContextManager;
+import factory.PlaywrightFactory;
 import io.cucumber.java.en.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,8 +13,10 @@ import pages.ProductsPage;
 public class ProductsSteps {
 
     private static final Logger log = LoggerFactory.getLogger(ProductsSteps.class);
-    private final Page page = Hooks.getPage();
+
+    private final Page page = PlaywrightFactory.getPage();
     private final ProductsPage productsPage = new ProductsPage(page);
+    private final ScenarioContext context = ScenarioContextManager.get();
 
     @Given("User is on Products page")
     public void isOnProductsPage() {
@@ -27,6 +31,7 @@ public class ProductsSteps {
         log.info("[ACTION] Adding product to cart: {}", productName);
         productsPage.hoverOverProductByName(productName);
         productsPage.clickAddToCartByName(productName);
+        context.set("selectedProduct", productName);
     }
 
     @When("Chooses to continue shopping")

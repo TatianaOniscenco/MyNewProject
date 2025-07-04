@@ -1,26 +1,31 @@
 package steps;
 
 import com.microsoft.playwright.Page;
+import context.ScenarioContext;
+import context.ScenarioContextManager;
 import context.UserContext;
 import enums.SignupCountry;
-import hooks.Hooks;
+import factory.PlaywrightFactory;
 import io.cucumber.java.en.*;
 import net.datafaker.Faker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pages.SignupPage;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SignupSteps {
+
     private static final Logger log = LoggerFactory.getLogger(SignupSteps.class);
 
-    private final Page page = Hooks.getPage();
+    private final Page page = PlaywrightFactory.getPage();
     private final SignupPage signupPage = new SignupPage(page);
+    private final ScenarioContext context = ScenarioContextManager.get();
     private final Faker faker = new Faker();
 
     @When("User enters valid account information")
     public void enterValidUserInformation() {
-        UserContext user = Hooks.getUserContext();
+        UserContext user = context.get("user");
 
         // Generate remaining info
         String password = faker.internet().password();
@@ -50,7 +55,7 @@ public class SignupSteps {
         user.setCity(city);
         user.setZipCode(zipCode);
         user.setPhoneNumber(phoneNumber);
-        Hooks.setUserContext(user);
+        context.set("user", user);
 
         log.info("[DATA] Final UserContext: {}", user);
     }
@@ -63,7 +68,12 @@ public class SignupSteps {
 
     @Then("user is redirected to Signup page")
     public void isRedirectedToSignupPage() {
-        log.info("[ASSERT] Checking visibility of 'Enter Account Information' section");
-        assertTrue(signupPage.isEnterAccountInfoVisible(), "'Enter Account Information' heading is not visible");
+        boolean isVisible = signupPage.isEnterAccountInfoVisible();
+        if (!isVisible) {
+            log.error("[ASSERT][FAIL] 'Enter Account Information' heading is NOT visible.");
+        } else {
+            log.info("[ASSERT] 'Enter Account Information' section is visible.");
+        }
+        assertTrue(isVisible, "'Enter Account Information' heading is not visible");
     }
 }

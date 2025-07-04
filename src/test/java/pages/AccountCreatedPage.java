@@ -2,10 +2,7 @@ package pages;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
-import com.microsoft.playwright.PlaywrightException;
 import com.microsoft.playwright.options.LoadState;
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AccountCreatedPage {
     private final Page page;

@@ -1,6 +1,8 @@
 package utils;
 
-import java.io.File;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -21,8 +23,12 @@ public class ScenarioPathBuilder {
 
     public static Path getScenarioFolder(String testType, String scenarioName) {
         Path path = Paths.get(ROOT_DIR, DATE, testType, RUN_TIMESTAMP, sanitize(scenarioName));
-        new File(path.toString()).mkdirs();
-        return path;
+        try {
+            Files.createDirectories(path);
+        } catch (IOException e) {
+            throw new UncheckedIOException("Failed to create scenario directory: " + path, e);
+        }
+        return path.toAbsolutePath();
     }
 
     public static String sanitize(String name) {

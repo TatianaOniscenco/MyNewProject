@@ -2,8 +2,10 @@ package steps;
 
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.TimeoutError;
+import context.ScenarioContext;
+import context.ScenarioContextManager;
 import context.UserContext;
-import hooks.Hooks;
+import factory.PlaywrightFactory;
 import io.cucumber.java.en.*;
 import net.datafaker.Faker;
 import org.slf4j.Logger;
@@ -11,23 +13,28 @@ import org.slf4j.LoggerFactory;
 import pages.LoginPage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LoginSteps {
 
     private static final Logger log = LoggerFactory.getLogger(LoginSteps.class);
-    private final Page page = Hooks.getPage();
+
+    private final Page page = PlaywrightFactory.getPage();
     private final LoginPage loginPage = new LoginPage(page);
+    private final ScenarioContext context = ScenarioContextManager.get();
     private final Faker faker = new Faker();
 
     @Then("System displays the {string} message")
     public void systemDisplaysTheMessage(String expectedMessage) {
         try {
             String actualMessage = loginPage.getErrorMessage(expectedMessage);
+            if (!expectedMessage.equals(actualMessage)) {
+                log.error("[ASSERT][FAIL] Message mismatch — Expected: '{}', Actual: '{}'", expectedMessage, actualMessage);
+            } else {
+                log.info("[ASSERT] Message matched: '{}'", actualMessage);
+            }
             assertEquals(expectedMessage, actualMessage);
-            log.info("[ASSERT] Message matched: '{}'", actualMessage);
-        } catch (AssertionError | TimeoutError e) {
-            log.error("[ASSERT] Message mismatch or not found. Expected: '{}'", expectedMessage, e);
+        } catch (TimeoutError e) {
+            log.error("[ASSERT][ERROR] Timeout while waiting for message: '{}'", expectedMessage, e);
             throw e;
         }
     }
@@ -55,8 +62,10 @@ public class LoginSteps {
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setEmail(email);
-        Hooks.setUserContext(user);  // Store for later
 
+        context.set("user", user);
+
+        log.info("[DATA] Generated new user: {} {}", firstName, lastName);
         loginPage.enterSignupName(firstName + " " + lastName);
         loginPage.enterSignupEmail(email);
     }
@@ -77,11 +86,17 @@ public class LoginSteps {
 
     @And("User inputs recent valid credentials to login")
     public void userInputsRecentValidCredentialsToLogin() {
-        UserContext user = Hooks.getUserContext();
+        UserContext user = context.get("user");
+        if (user == null) {
+            log.error("[ERROR] UserContext is null when trying to input recent credentials");
+            throw new IllegalStateException("No user context found");
+        }
+
         log.info("[ACTION] Logging in with recent user: {}", user.getEmail());
         loginPage.enterLoginEmail(user.getEmail());
         loginPage.enterLoginPassword(user.getPassword());
     }
 }
+
 
 

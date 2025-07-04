@@ -2,7 +2,10 @@ package steps;
 
 import com.microsoft.playwright.Page;
 import config.ConfigReader;
-import hooks.Hooks;
+import context.ScenarioContext;
+import context.ScenarioContextManager;
+import context.UserContext;
+import factory.PlaywrightFactory;
 import io.cucumber.java.en.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,9 +16,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class HomeSteps {
+
     private static final Logger log = LoggerFactory.getLogger(HomeSteps.class);
-    private final Page page = Hooks.getPage();
+
+    private final Page page = PlaywrightFactory.getPage();
     private final HomePage homePage = new HomePage(page);
+    private final ScenarioContext context = ScenarioContextManager.get();
 
     @Given("Homepage is loaded")
     public void isOnTheHomePage() {
@@ -46,22 +52,37 @@ public class HomeSteps {
         String expectedUrl = ConfigReader.get("base.url").replaceAll("/+$", "");
         String actualUrl = homePage.getCurrentUrl().replaceAll("/+$", "");
 
-        log.info("[ASSERT] Validating homepage URL: expected='{}', actual='{}'", expectedUrl, actualUrl);
-        assertEquals(actualUrl, expectedUrl, "Expected to be at: " + expectedUrl + ", but was: " + actualUrl);
+        if (!expectedUrl.equals(actualUrl)) {
+            log.error("[ASSERT][FAIL] Expected homepage URL: '{}', but got: '{}'", expectedUrl, actualUrl);
+        } else {
+            log.info("[ASSERT] Homepage URL matched: {}", actualUrl);
+        }
+        assertEquals(expectedUrl, actualUrl, "Expected to be at: " + expectedUrl + ", but was: " + actualUrl);
     }
 
     @Then("System displays {string} up in the header")
     public void systemDisplaysUserName(String expectedText) {
         String actualText = homePage.getLoggedInText();
-        log.info("[ASSERT] Checking header for existing user contains: \"{}\" | Found: \"{}\"", expectedText, actualText);
+        if (!actualText.contains(expectedText)) {
+            log.error("[ASSERT][FAIL] Header does not contain expected text. Expected: '{}', Found: '{}'", expectedText, actualText);
+        } else {
+            log.info("[ASSERT] Header contains expected text: '{}'", expectedText);
+        }
         assertTrue(actualText.contains(expectedText),
                 "Expected to find text: " + expectedText + " but found: " + actualText);
     }
+
     @Then("System displays username up in the header")
     public void systemDisplaysUserNameFromContext() {
-        String expectedText = Hooks.getUserContext().getFullName();
+        UserContext user = context.get("user");
+        String expectedText = user.getFullName();
         String actualText = homePage.getLoggedInText();
-        log.info("[ASSERT] Checking header for new user contains: \"{}\" | Found: \"{}\"", expectedText, actualText);
+
+        if (!actualText.contains(expectedText)) {
+            log.error("[ASSERT][FAIL] Header does not contain new user's name. Expected: '{}', Found: '{}'", expectedText, actualText);
+        } else {
+            log.info("[ASSERT] Header contains new user's name: '{}'", expectedText);
+        }
         assertTrue(actualText.contains(expectedText),
                 "Expected to find: " + expectedText + ", but got: " + actualText);
     }
@@ -72,3 +93,4 @@ public class HomeSteps {
         assertThat(homePage.getLoggedInHeaderLocator(fullName)).isVisible();
     }
 }
+

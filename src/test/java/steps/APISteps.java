@@ -5,13 +5,15 @@ import api.actions.ApiActions;
 import api.dtos.responses.ProductListResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import config.ConfigReader;
+import enums.HttpMethod;
 import io.cucumber.java.en.*;
 import io.restassured.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
-import enums.HttpMethod;
 
 public class APISteps {
     private static final Logger log = LoggerFactory.getLogger(APISteps.class);
@@ -55,16 +57,25 @@ public class APISteps {
     @Then("Response code is {int}")
     public void responseCodeIs(int expectedCode) {
         int actualCode = response.statusCode();
-        log.info("[ASSERT] Expecting response code: {} | Actual: {}", expectedCode, actualCode);
-        assertEquals(expectedCode, actualCode, " Expected code: " + expectedCode + ", but got: " + actualCode);
+        if (actualCode != expectedCode) {
+            log.error("[ASSERT][FAIL] Expected status code: {}, but got: {}", expectedCode, actualCode);
+            log.debug("[RESPONSE BODY] {}", response.asPrettyString());
+        } else {
+            log.info("[ASSERT] Status code matched: {}", expectedCode);
+        }
+        assertEquals(expectedCode, actualCode, "Expected code: " + expectedCode + ", but got: " + actualCode);
     }
 
     @Then("Response message is {string}")
     public void responseMessageIs(String expectedMessage) {
         String actual = response.getBody().asString();
-        log.info("[ASSERT] Verifying response contains message: \"{}\"", expectedMessage);
+        if (!actual.contains(expectedMessage)) {
+            log.error("[ASSERT][FAIL] Expected message not found.\nExpected: '{}'\nActual: '{}'", expectedMessage, actual);
+        } else {
+            log.info("[ASSERT] Response contains expected message: '{}'", expectedMessage);
+        }
         assertTrue(actual.contains(expectedMessage),
-                " Expected message: '" + expectedMessage + "'\nBut got: '" + actual + "'");
+                "Expected message: '" + expectedMessage + "'\nBut got: '" + actual + "'");
     }
 
     @Then("Response contains a list of products")
@@ -72,25 +83,29 @@ public class APISteps {
         ObjectMapper mapper = new ObjectMapper();
         ProductListResponse productListResponse = mapper.readValue(response.asString(), ProductListResponse.class);
 
-        log.info("[ASSERT] Validating product list is not null or empty");
-        assertNotNull(productListResponse.products, " 'products' list is null");
-        assertFalse(productListResponse.products.isEmpty(), " 'products' list is empty");
+        if (productListResponse.products == null || productListResponse.products.isEmpty()) {
+            log.error("[ASSERT][FAIL] Product list is missing or empty.\nResponse: {}", response.asPrettyString());
+        } else {
+            log.info("[ASSERT] Parsed {} products", productListResponse.products.size());
+            productListResponse.products.stream().limit(3).forEach(p -> log.info(" - {}", p));
+        }
 
-        log.info("[INFO] Parsed {} products", productListResponse.products.size());
-        productListResponse.products.stream()
-                .limit(3)
-                .forEach(product -> log.info(" - {}", product));
+        assertNotNull(productListResponse.products, "'products' list is null");
+        assertFalse(productListResponse.products.isEmpty(), "'products' list is empty");
     }
 
     @Then("Response contains a list of brands")
     public void responseContainsListOfBrands() {
         List<?> brands = response.jsonPath().getList("brands");
 
-        log.info("[ASSERT] Validating brand list is not null or empty");
-        assertNotNull(brands, " 'brands' key not found in response");
-        assertFalse(brands.isEmpty(), " 'brands' list is empty");
+        if (brands == null || brands.isEmpty()) {
+            log.error("[ASSERT][FAIL] Brands list is missing or empty.\nResponse: {}", response.asPrettyString());
+        } else {
+            log.info("[ASSERT] Found {} brands", brands.size());
+        }
 
-        log.info("[INFO] Found {} brands", brands.size());
+        assertNotNull(brands, "'brands' key not found in response");
+        assertFalse(brands.isEmpty(), "'brands' list is empty");
     }
 
     @Then("Response contains searched products list")
@@ -98,14 +113,14 @@ public class APISteps {
         ObjectMapper mapper = new ObjectMapper();
         ProductListResponse productListResponse = mapper.readValue(response.asString(), ProductListResponse.class);
 
-        log.info("[ASSERT] Validating searched product list is not null or empty");
-        assertNotNull(productListResponse.products, " 'products' list is null");
-        assertFalse(productListResponse.products.isEmpty(), " 'products' list is empty");
+        if (productListResponse.products == null || productListResponse.products.isEmpty()) {
+            log.error("[ASSERT][FAIL] Searched product list is missing or empty.\nResponse: {}", response.asPrettyString());
+        } else {
+            log.info("[ASSERT] Found {} matching products", productListResponse.products.size());
+            productListResponse.products.stream().limit(3).forEach(p -> log.info(" - {}", p));
+        }
 
-        log.info("[INFO] Found {} matching products", productListResponse.products.size());
-        productListResponse.products.stream()
-                .limit(3)
-                .forEach(product -> log.info(" - {}", product));
-
+        assertNotNull(productListResponse.products, "'products' list is null");
+        assertFalse(productListResponse.products.isEmpty(), "'products' list is empty");
     }
 }

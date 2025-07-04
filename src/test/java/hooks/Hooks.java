@@ -1,12 +1,12 @@
 package hooks;
 
 import com.microsoft.playwright.Page;
+import context.ScenarioContextManager;
 import factory.PlaywrightFactory;
 import io.cucumber.java.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-import context.UserContext;
 import utils.ScenarioPathBuilder;
 
 import java.nio.file.Path;
@@ -17,23 +17,6 @@ public class Hooks {
 
     private static final ThreadLocal<Page> threadLocalPage = new ThreadLocal<>();
     private static final ThreadLocal<Path> threadLocalScenarioPath = new ThreadLocal<>();
-    private static final ThreadLocal<UserContext> threadLocalUserContext = new ThreadLocal<>();
-
-    public static Page getPage() {
-        return threadLocalPage.get();
-    }
-
-    public static Path getScenarioPath() {
-        return threadLocalScenarioPath.get();
-    }
-
-    public static UserContext getUserContext() {
-        return threadLocalUserContext.get();
-    }
-
-    public static void setUserContext(UserContext userContext) {
-        threadLocalUserContext.set(userContext);
-    }
 
     @Before("@UI")
     public void beforeUIScenario(Scenario scenario) {
@@ -43,6 +26,8 @@ public class Hooks {
 
         MDC.put("scenarioLogPath", scenarioPath.resolve("log.txt").toString());
         log.info("START (UI) - {}", scenarioName);
+
+        ScenarioContextManager.get(); // ensure context is initialized
 
         PlaywrightFactory.initBrowser();
         threadLocalPage.set(PlaywrightFactory.getPage());
@@ -56,6 +41,9 @@ public class Hooks {
 
         MDC.put("scenarioLogPath", scenarioPath.resolve("log.txt").toString());
         log.info("START (API) - {}", scenarioName);
+        log.info("API test — skipping browser setup.");
+
+        ScenarioContextManager.get(); // ensure context is initialized
     }
 
     @After
@@ -79,8 +67,7 @@ public class Hooks {
         PlaywrightFactory.close();
         threadLocalPage.remove();
         threadLocalScenarioPath.remove();
-        threadLocalUserContext.remove();
+        ScenarioContextManager.reset();
         MDC.clear();
     }
 }
-
