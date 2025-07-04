@@ -18,7 +18,7 @@ Background: User is on login page
     Then User is redirected to homepage
     And System displays username up in the header
     When User clicks Delete Account button
-    Then System displays the "ACCOUNT DELETED!" message
+    Then System displays the "Account Deleted!" message
 
   @Negative
   Scenario: Register user with existing email

@@ -44,7 +44,9 @@ public class LoginPage {
         page.locator(SIGNUP_BUTTON).click();
     }
 
-    public boolean isErrorMessageVisible(String message) {
-        return page.locator(String.format(ERROR_MESSAGE_TEMPLATE, message)).isVisible();
+    public String getErrorMessage(String message) {
+        return page.locator(String.format(ERROR_MESSAGE_TEMPLATE, message))
+                .textContent()
+                .trim();
     }
 }

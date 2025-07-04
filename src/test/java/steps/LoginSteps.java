@@ -1,6 +1,7 @@
 package steps;
 
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.TimeoutError;
 import context.UserContext;
 import hooks.Hooks;
 import io.cucumber.java.en.*;
@@ -9,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pages.LoginPage;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LoginSteps {
@@ -19,9 +21,15 @@ public class LoginSteps {
     Faker faker = new Faker();
 
     @Then("System displays the {string} message")
-    public void systemDisplaysTheMessage(String message) {
-        log.info("[ASSERT] Verifying error/success message: \"{}\" is visible", message);
-        assertTrue(loginPage.isErrorMessageVisible(message));
+    public void systemDisplaysTheMessage(String expectedMessage) {
+        try {
+            String actualMessage = loginPage.getErrorMessage(expectedMessage);
+            assertEquals(expectedMessage, actualMessage);
+            log.info("[ASSERT] Message matched: '{}'", actualMessage);
+        } catch (AssertionError | TimeoutError e) {
+            log.error("[ASSERT] Message mismatch or not found. Expected: '{}'", expectedMessage, e);
+            throw e;
+        }
     }
 
     @When("User inputs {string} and {string} credentials")
