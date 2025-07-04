@@ -18,7 +18,7 @@ public class LoginSteps {
     private static final Logger log = LoggerFactory.getLogger(LoginSteps.class);
     private final Page page = Hooks.getPage();
     private final LoginPage loginPage = new LoginPage(page);
-    Faker faker = new Faker();
+    private final Faker faker = new Faker();
 
     @Then("System displays the {string} message")
     public void systemDisplaysTheMessage(String expectedMessage) {

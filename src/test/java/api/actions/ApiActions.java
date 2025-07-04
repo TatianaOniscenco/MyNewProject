@@ -8,7 +8,7 @@ import enums.HttpMethod;
 
 public class ApiActions {
 
-    private static final String baseUrl = ConfigReader.get("base.url");
+    private static final String BASE_URL = ConfigReader.get("base.url");
 
     public static Response sendRequest(ApiEndpoint endpoint, HttpMethod method) {
         String url = ConfigReader.get("base.url") + endpoint.getPath();
@@ -64,7 +64,7 @@ public class ApiActions {
                 .contentType("application/x-www-form-urlencoded")
                 .formParam("search_product", productName)
                 .when()
-                .post(baseUrl + SEARCH_PRODUCT.getPath())
+                .post(BASE_URL + SEARCH_PRODUCT.getPath())
                 .then()
                 .log().body()
                 .extract()
@@ -78,7 +78,7 @@ public class ApiActions {
                 .formParam("email", email)
                 .formParam("password", password)
                 .when()
-                .post(baseUrl + VERIFY_LOGIN.getPath())
+                .post(BASE_URL + VERIFY_LOGIN.getPath())
                 .then()
                 .log().body()
                 .extract()
@@ -91,7 +91,7 @@ public class ApiActions {
                 .contentType("application/x-www-form-urlencoded")
                 .formParam("password", password)
                 .when()
-                .post(baseUrl + VERIFY_LOGIN.getPath())
+                .post(BASE_URL + VERIFY_LOGIN.getPath())
                 .then()
                 .log().body()
                 .extract()

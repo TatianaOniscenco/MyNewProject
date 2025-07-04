@@ -9,7 +9,6 @@ import net.datafaker.Faker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pages.SignupPage;
-
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SignupSteps {

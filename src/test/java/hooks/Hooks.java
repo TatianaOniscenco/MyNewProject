@@ -1,27 +1,23 @@
 package hooks;
 
 import com.microsoft.playwright.Page;
-import context.UserContext;
 import factory.PlaywrightFactory;
 import io.cucumber.java.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import context.UserContext;
 import utils.ScenarioPathBuilder;
 
 import java.nio.file.Path;
 
 public class Hooks {
-    private Path scenarioPath;
-    private String featureName;
-    private String scenarioName;
-    private String testType;
+
+    private static final Logger log = LoggerFactory.getLogger(Hooks.class);
 
     private static final ThreadLocal<Page> threadLocalPage = new ThreadLocal<>();
     private static final ThreadLocal<Path> threadLocalScenarioPath = new ThreadLocal<>();
     private static final ThreadLocal<UserContext> threadLocalUserContext = new ThreadLocal<>();
-
-    private static final Logger log = LoggerFactory.getLogger(Hooks.class);
 
     public static Page getPage() {
         return threadLocalPage.get();
@@ -39,44 +35,47 @@ public class Hooks {
         threadLocalUserContext.set(userContext);
     }
 
-    @Before
-    public void beforeScenario(Scenario scenario) {
-        this.featureName = scenario.getUri().toString().replaceAll(".*features/", "").replace(".feature", "");
-        this.scenarioName = scenario.getName();
-        this.testType = scenario.getSourceTagNames().contains("@API") ? "API" : "UI";
-
-        scenarioPath = ScenarioPathBuilder.getScenarioFolder(testType, scenarioName);
+    @Before("@UI")
+    public void beforeUIScenario(Scenario scenario) {
+        String scenarioName = scenario.getName();
+        Path scenarioPath = ScenarioPathBuilder.getScenarioFolder("UI", scenarioName);
         threadLocalScenarioPath.set(scenarioPath);
 
-        String fullPath = scenarioPath.resolve("log.txt").toString();
-        MDC.put("scenarioLogPath", fullPath);
+        MDC.put("scenarioLogPath", scenarioPath.resolve("log.txt").toString());
+        log.info("START (UI) - {}", scenarioName);
 
-        log.info("START - {}", scenario.getName());
-
-        if (testType.equals("API")) {
-            log.info("API test — skipping browser setup.");
-            return;
-        }
-
-        // Initialize browser for UI tests
         PlaywrightFactory.initBrowser();
         threadLocalPage.set(PlaywrightFactory.getPage());
     }
 
+    @Before("@API")
+    public void beforeAPIScenario(Scenario scenario) {
+        String scenarioName = scenario.getName();
+        Path scenarioPath = ScenarioPathBuilder.getScenarioFolder("API", scenarioName);
+        threadLocalScenarioPath.set(scenarioPath);
+
+        MDC.put("scenarioLogPath", scenarioPath.resolve("log.txt").toString());
+        log.info("START (API) - {}", scenarioName);
+    }
+
     @After
     public void afterScenario(Scenario scenario) {
+        String scenarioName = scenario.getName();
         String result = scenario.isFailed() ? "FAILED" : "PASSED";
-        log.info("{} - {}", result, scenario.getName());
+        log.info("{} - {}", result, scenarioName);
 
-        if (!testType.equals("API") && getPage() != null) {
-            Path screenshotPath = threadLocalScenarioPath.get().resolve(result + ".png");
-            getPage().screenshot(new Page.ScreenshotOptions().setPath(screenshotPath));
+        Page page = threadLocalPage.get();
+        Path path = threadLocalScenarioPath.get();
+
+        if (page != null && path != null) {
+            Path screenshotPath = path.resolve(result + ".png");
+            page.screenshot(new Page.ScreenshotOptions().setPath(screenshotPath));
             log.info("Screenshot saved: {}", screenshotPath);
         }
 
-        log.info("END - {}", scenario.getName());
+        log.info("END - {}", scenarioName);
 
-        // Clean up
+        // Cleanup
         PlaywrightFactory.close();
         threadLocalPage.remove();
         threadLocalScenarioPath.remove();
