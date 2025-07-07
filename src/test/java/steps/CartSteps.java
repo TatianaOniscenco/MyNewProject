@@ -17,7 +17,6 @@ public class CartSteps {
 
     private final Page page = PlaywrightFactory.getPage();
     private final CartPage cartPage = new CartPage(page);
-    private final ScenarioContext context = ScenarioContextManager.get();
 
     @Then("Selected {string} is visible in the cart")
     public void areProductsVisible(String productName) {

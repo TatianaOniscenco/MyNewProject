@@ -4,11 +4,13 @@ import com.microsoft.playwright.Page;
 import context.ScenarioContextManager;
 import factory.PlaywrightFactory;
 import io.cucumber.java.*;
+import io.qameta.allure.Allure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import utils.ScenarioPathBuilder;
 
+import java.io.ByteArrayInputStream;
 import java.nio.file.Path;
 
 public class Hooks {
@@ -57,8 +59,14 @@ public class Hooks {
 
         if (page != null && path != null) {
             Path screenshotPath = path.resolve(result + ".png");
-            page.screenshot(new Page.ScreenshotOptions().setPath(screenshotPath));
+            // Always saves a screenshot to disk
+            byte[] screenshot = page.screenshot(new Page.ScreenshotOptions().setPath(screenshotPath));
             log.info("Screenshot saved: {}", screenshotPath);
+
+            // Screenshot to Allure only on failure
+            if (scenario.isFailed()) {
+                Allure.addAttachment("Failure Screenshot", new ByteArrayInputStream(screenshot));
+            }
         }
 
         log.info("END - {}", scenarioName);
