@@ -1,7 +1,9 @@
 package steps;
 
+import api.actions.ApiActions;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.TimeoutError;
+import config.ConfigReader;
 import context.ScenarioContext;
 import context.ScenarioContextManager;
 import context.UserContext;
@@ -40,9 +42,11 @@ public class LoginSteps {
     }
 
     @When("User inputs {string} and {string} credentials")
-    public void inputCredentials(String login, String password) {
-        log.info("[ACTION] Inputting login credentials: email = {}, password = {}", login, password);
-        loginPage.enterLoginEmail(login);
+    public void inputCredentials(String emailKey, String passwordKey) {
+        String email = ConfigReader.get(emailKey.replace(" ", "."));
+        String password = ConfigReader.get(passwordKey.replace(" ", "."));
+        log.info("[ACTION] Inputting login credentials: email = {}, password = {}", email, password);
+        loginPage.enterLoginEmail(email);
         loginPage.enterLoginPassword(password);
     }
 

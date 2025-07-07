@@ -19,10 +19,6 @@ public class ScenarioContext {
         return context.containsKey(key);
     }
 
-    public void clear() {
-        context.clear();
-    }
-
     @Override
     public String toString() {
         return "ScenarioContext{" + "context=" + context + '}';
