@@ -1,6 +1,5 @@
 package steps;
 
-import api.actions.ApiActions;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.TimeoutError;
 import config.ConfigReader;

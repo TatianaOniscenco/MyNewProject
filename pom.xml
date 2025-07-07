@@ -124,8 +124,10 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0-M7</version>
                 <configuration>
-                    <parallel>classesAndMethods</parallel>
-                    <useUnlimitedThreads>true</useUnlimitedThreads>
+                    <useModulePath>false</useModulePath>
+                    <includes>
+                        <include>**/*Runner.java</include>
+                    </includes>
                 </configuration>
             </plugin>
 
