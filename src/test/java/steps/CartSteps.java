@@ -1,8 +1,6 @@
 package steps;
 
 import com.microsoft.playwright.Page;
-import context.ScenarioContext;
-import context.ScenarioContextManager;
 import factory.PlaywrightFactory;
 import io.cucumber.java.en.Then;
 import org.slf4j.Logger;

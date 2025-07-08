@@ -65,7 +65,7 @@ public class Hooks {
 
             // Screenshot to Allure only on failure
             if (scenario.isFailed()) {
-                Allure.addAttachment("Failure Screenshot", new ByteArrayInputStream(screenshot));
+                Allure.addAttachment("Failure Screenshot", "image/png", new ByteArrayInputStream(screenshot), ".png");
             }
         }
 

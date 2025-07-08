@@ -26,7 +26,7 @@ public class ApiActions {
             case POST:
                 return given()
                         .log().all()
-                        .contentType("application/x-www-form-urlencoded")
+                        .contentType(ConfigReader.get("content.type"))
                         .when()
                         .post(url)
                         .then()
@@ -36,7 +36,7 @@ public class ApiActions {
             case PUT:
                 return given()
                         .log().all()
-                        .contentType("application/x-www-form-urlencoded")
+                        .contentType(ConfigReader.get("content.type"))
                         .when()
                         .put(url)
                         .then()
@@ -46,7 +46,7 @@ public class ApiActions {
             case DELETE:
                 return given()
                         .log().all()
-                        .contentType("application/x-www-form-urlencoded")
+                        .contentType(ConfigReader.get("content.type"))
                         .when()
                         .delete(url)
                         .then()
@@ -61,7 +61,7 @@ public class ApiActions {
     public static Response postToSearchProduct(String productName) {
         return given()
                 .log().all()
-                .contentType("application/x-www-form-urlencoded")
+                .contentType(ConfigReader.get("content.type"))
                 .formParam("search_product", productName)
                 .when()
                 .post(BASE_URL + SEARCH_PRODUCT.getPath())
@@ -74,7 +74,7 @@ public class ApiActions {
     public static Response postToVerifyLogin(String email, String password) {
         return given()
                 .log().all()
-                .contentType("application/x-www-form-urlencoded")
+                .contentType(ConfigReader.get("content.type"))
                 .formParam("email", email)
                 .formParam("password", password)
                 .when()
@@ -88,7 +88,7 @@ public class ApiActions {
     public static Response postToVerifyLogin(String password) {
         return given()
                 .log().all()
-                .contentType("application/x-www-form-urlencoded")
+                .contentType(ConfigReader.get("content.type"))
                 .formParam("password", password)
                 .when()
                 .post(BASE_URL + VERIFY_LOGIN.getPath())
