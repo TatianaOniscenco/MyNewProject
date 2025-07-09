@@ -11,9 +11,9 @@ public class PlaywrightFactory {
     private static final ThreadLocal<BrowserContext> context = new ThreadLocal<>();
     private static final ThreadLocal<Page> page = new ThreadLocal<>();
 
-    public static void initBrowser() {
+    public static void initBrowser(BrowserName browserName) {
         // Convert browser config value to enum
-        BrowserName browserType = BrowserName.fromString(ConfigReader.get("browser"));
+        //BrowserName browserType = BrowserName.fromString(ConfigReader.get("browser"));
         boolean isHeadless = Boolean.parseBoolean(ConfigReader.get("headless"));
 
         // Create a new Playwright instance
@@ -25,7 +25,7 @@ public class PlaywrightFactory {
                         .setHeadless(isHeadless);
 
         // Launch the specified browser using enum
-        switch (browserType) {
+        switch (browserName) {
             case FIREFOX:
                 browser.set(playwright.get().firefox().launch(options));
                 break;

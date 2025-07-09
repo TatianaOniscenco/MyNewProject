@@ -1,5 +1,6 @@
 package hooks;
 
+import ENUM.BrowserName;
 import com.microsoft.playwright.Page;
 import context.ScenarioContextManager;
 import factory.PlaywrightFactory;
@@ -22,6 +23,7 @@ public class Hooks {
 
     @Before("@UI")
     public void beforeUIScenario(Scenario scenario) {
+        BrowserName browser = BrowserName.CHROMIUM;
         String scenarioName = scenario.getName();
         Path scenarioPath = ScenarioPathBuilder.getScenarioFolder("UI", scenarioName);
         threadLocalScenarioPath.set(scenarioPath);
@@ -31,7 +33,8 @@ public class Hooks {
 
         ScenarioContextManager.get(); // ensure context is initialized
 
-        PlaywrightFactory.initBrowser();
+
+        PlaywrightFactory.initBrowser(browser);
         threadLocalPage.set(PlaywrightFactory.getPage());
     }
 
