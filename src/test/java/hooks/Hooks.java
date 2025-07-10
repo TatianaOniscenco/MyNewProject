@@ -10,16 +10,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import utils.ScenarioPathBuilder;
-
 import java.io.ByteArrayInputStream;
 import java.nio.file.Path;
 
 public class Hooks {
 
-    private static final Logger log = LoggerFactory.getLogger(Hooks.class);
-
-    private static final ThreadLocal<Page> threadLocalPage = new ThreadLocal<>();
-    private static final ThreadLocal<Path> threadLocalScenarioPath = new ThreadLocal<>();
+    private final Logger log = LoggerFactory.getLogger(Hooks.class);
+    private final ThreadLocal<Page> threadLocalPage = new ThreadLocal<>();
+    private final ThreadLocal<Path> threadLocalScenarioPath = new ThreadLocal<>();
 
     @Before("@UI")
     public void beforeUIScenario(Scenario scenario) {

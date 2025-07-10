@@ -1,4 +1,4 @@
-package enums;
+package ENUM;
 
 public enum SignupCountry {
     INDIA("India"),

@@ -41,10 +41,6 @@ public class PlaywrightFactory {
         return page.get();
     }
 
-    public static BrowserContext getContext() {
-        return context.get();
-    }
-
     public static void close() {
         closeSafely(page.get(), "page");
         closeSafely(context.get(), "context");

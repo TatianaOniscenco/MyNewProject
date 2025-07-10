@@ -12,13 +12,11 @@ import net.datafaker.Faker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pages.LoginPage;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class LoginSteps {
 
-    private static final Logger log = LoggerFactory.getLogger(LoginSteps.class);
-
+    private final Logger log = LoggerFactory.getLogger(LoginSteps.class);
     private final Page page = PlaywrightFactory.getPage();
     private final LoginPage loginPage = new LoginPage(page);
     private final ScenarioContext context = ScenarioContextManager.get();
@@ -28,12 +26,15 @@ public class LoginSteps {
     public void systemDisplaysTheMessage(String expectedMessage) {
         try {
             String actualMessage = loginPage.getErrorMessage(expectedMessage);
-            if (!expectedMessage.equals(actualMessage)) {
-                log.error("[ASSERT][FAIL] Message mismatch — Expected: '{}', Actual: '{}'", expectedMessage, actualMessage);
-            } else {
+
+            if (expectedMessage.equals(actualMessage)) {
                 log.info("[ASSERT] Message matched: '{}'", actualMessage);
+            } else {
+                log.error("[ASSERT][FAIL] Message mismatch — Expected: '{}', Actual: '{}'", expectedMessage, actualMessage);
+                assertEquals(expectedMessage, actualMessage,
+                        String.format("Expected message: '%s' but got: '%s'", expectedMessage, actualMessage));
             }
-            assertEquals(expectedMessage, actualMessage);
+
         } catch (TimeoutError e) {
             log.error("[ASSERT][ERROR] Timeout while waiting for message: '{}'", expectedMessage, e);
             throw e;
@@ -44,15 +45,15 @@ public class LoginSteps {
     public void inputCredentials(String emailKey, String passwordKey) {
         String email = ConfigReader.get(emailKey.replace(" ", "."));
         String password = ConfigReader.get(passwordKey.replace(" ", "."));
-        log.info("[ACTION] Inputting login credentials: email = {}, password = {}", email, password);
         loginPage.enterLoginEmail(email);
         loginPage.enterLoginPassword(password);
+        log.info("[ACTION] Inputting login credentials: email = {}, password = {}", email, password);
     }
 
     @When("User submits the login form")
     public void submitLoginForm() {
-        log.info("[ACTION] Clicking login button");
         loginPage.clickLoginButton();
+        log.info("[ACTION] Clicking login button");
     }
 
     @And("User inputs new valid credentials in New User Signup form")
@@ -68,23 +69,23 @@ public class LoginSteps {
 
         context.set("user", user);
 
-        log.info("[DATA] Generated new user: {} {}", firstName, lastName);
         loginPage.enterSignupName(firstName + " " + lastName);
         loginPage.enterSignupEmail(email);
+        log.info("[DATA] Generated new user: {} {}", firstName, lastName);
     }
 
     @And("User clicks on Signup button")
     public void clicksSignupButton() {
-        log.info("[ACTION] Clicking signup button");
         loginPage.clickSignupButton();
+        log.info("[ACTION] Clicking signup button");
     }
 
     @When("User inputs existing email {string} in New User Signup form")
     public void inputsExistingCredentialsInNewUserSignupForm(String email) {
         String name = faker.name().fullName();
-        log.info("[DATA] Inputting existing email: {} with random name: {}", email, name);
         loginPage.enterSignupName(name);
         loginPage.enterSignupEmail(email);
+        log.info("[DATA] Inputting existing email: {} with random name: {}", email, name);
     }
 
     @And("User inputs recent valid credentials to login")
@@ -95,9 +96,9 @@ public class LoginSteps {
             throw new IllegalStateException("No user context found");
         }
 
-        log.info("[ACTION] Logging in with recent user: {}", user.getEmail());
         loginPage.enterLoginEmail(user.getEmail());
         loginPage.enterLoginPassword(user.getPassword());
+        log.info("[ACTION] Logging in with recent user: {}", user.getEmail());
     }
 }
 

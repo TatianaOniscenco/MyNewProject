@@ -3,6 +3,7 @@ package pages;
 import com.microsoft.playwright.Page;
 
 public class SignupPage {
+
     private final Page page;
 
     // Locators
@@ -58,7 +59,6 @@ public class SignupPage {
 
     public void enterMobileNumber(String phoneNumber) {
         page.locator(MOBILE_NUMBER_FIELD).fill(phoneNumber);
-        page.waitForTimeout(3000); // Optional delay
     }
 
     public void clickCreateAccountButton() {

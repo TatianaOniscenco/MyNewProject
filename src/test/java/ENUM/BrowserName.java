@@ -11,16 +11,5 @@ public enum BrowserName {
         this.key = key;
     }
 
-    public String getKey() {
-        return key;
-    }
 
-    public static BrowserName fromString(String key) {
-        for (BrowserName browser : BrowserName.values()) {
-            if (browser.key.equalsIgnoreCase(key)) {
-                return browser;
-            }
-        }
-        throw new IllegalArgumentException("No enum found for key: " + key);
-    }
 }

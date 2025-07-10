@@ -4,7 +4,7 @@ import config.ConfigReader;
 import io.restassured.response.Response;
 import static ENUM.ApiEndpoint.*;
 import static io.restassured.RestAssured.*;
-import enums.HttpMethod;
+import ENUM.HttpMethod;
 
 public class ApiActions {
 

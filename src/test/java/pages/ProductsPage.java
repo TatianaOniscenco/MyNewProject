@@ -2,6 +2,7 @@ package pages;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import config.ConfigReader;
 
 public class ProductsPage {
 
@@ -12,6 +13,7 @@ public class ProductsPage {
     private static final String ADD_TO_CART_BUTTON = "xpath=//a[contains(@class,'add-to-cart')]";
     private static final String CONTINUE_SHOPPING_BUTTON = "button:has-text('Continue Shopping')";
     private static final String VIEW_CART_MODAL_BUTTON = "#cartModal a[href='/view_cart']";
+    private static final String PRODUCTS_URL = ConfigReader.get("base.url") + "/products";
 
     // Constructor
     public ProductsPage(Page page) {
@@ -37,5 +39,9 @@ public class ProductsPage {
 
     public void clickViewCartFromModal() {
         page.locator(VIEW_CART_MODAL_BUTTON).click();
+    }
+
+    public void navigateToProductsPage() {
+        page.navigate(PRODUCTS_URL);
     }
 }

@@ -4,7 +4,7 @@ import com.microsoft.playwright.Page;
 import context.ScenarioContext;
 import context.ScenarioContextManager;
 import context.UserContext;
-import enums.SignupCountry;
+import ENUM.SignupCountry;
 import factory.PlaywrightFactory;
 import io.cucumber.java.en.*;
 import net.datafaker.Faker;
@@ -16,8 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SignupSteps {
 
-    private static final Logger log = LoggerFactory.getLogger(SignupSteps.class);
-
+    private final Logger log = LoggerFactory.getLogger(SignupSteps.class);
     private final Page page = PlaywrightFactory.getPage();
     private final SignupPage signupPage = new SignupPage(page);
     private final ScenarioContext context = ScenarioContextManager.get();
@@ -62,18 +61,18 @@ public class SignupSteps {
 
     @When("User submits the signup form clicking on Create Account button")
     public void submitSignupForm() {
-        log.info("[ACTION] Clicking 'Create Account' button");
         signupPage.clickCreateAccountButton();
+        log.info("[ACTION] Clicking 'Create Account' button");
     }
 
     @Then("user is redirected to Signup page")
     public void isRedirectedToSignupPage() {
         boolean isVisible = signupPage.isEnterAccountInfoVisible();
-        if (!isVisible) {
-            log.error("[ASSERT][FAIL] 'Enter Account Information' heading is NOT visible.");
-        } else {
+        if (isVisible) {
             log.info("[ASSERT] 'Enter Account Information' section is visible.");
+        } else {
+            log.error("[ASSERT][FAIL] 'Enter Account Information' heading is NOT visible.");
+            assertTrue(false, "'Enter Account Information' heading is not visible");
         }
-        assertTrue(isVisible, "'Enter Account Information' heading is not visible");
     }
 }
