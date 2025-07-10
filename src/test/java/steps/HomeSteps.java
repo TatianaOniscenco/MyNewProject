@@ -52,12 +52,12 @@ public class HomeSteps {
         String expectedUrl = ConfigReader.get("base.url").replaceAll("/+$", "");
         String actualUrl = homePage.getCurrentUrl().replaceAll("/+$", "");
 
-        if (!expectedUrl.equals(actualUrl)) {
-            log.error("[ASSERT][FAIL] Expected homepage URL: '{}', but got: '{}'", expectedUrl, actualUrl);
-        } else {
+        if (expectedUrl.equals(actualUrl)) {
             log.info("[ASSERT] Homepage URL matched: {}", actualUrl);
+        } else {
+            log.error("[ASSERT][FAIL] Expected homepage URL: '{}', but got: '{}'", expectedUrl, actualUrl);
+            assertEquals(expectedUrl, actualUrl, "Expected to be at: " + expectedUrl + ", but was: " + actualUrl);
         }
-        assertEquals(expectedUrl, actualUrl, "Expected to be at: " + expectedUrl + ", but was: " + actualUrl);
     }
 
     @Then("System displays {string} up in the header")

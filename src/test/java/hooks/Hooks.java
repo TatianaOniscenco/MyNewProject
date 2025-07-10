@@ -23,7 +23,9 @@ public class Hooks {
 
     @Before("@UI")
     public void beforeUIScenario(Scenario scenario) {
+        // Hardcoded browser to be used (CHROMIUM, FIREFOX, or WEBKIT)
         BrowserName browser = BrowserName.CHROMIUM;
+
         String scenarioName = scenario.getName();
         Path scenarioPath = ScenarioPathBuilder.getScenarioFolder("UI", scenarioName);
         threadLocalScenarioPath.set(scenarioPath);
@@ -31,9 +33,7 @@ public class Hooks {
         MDC.put("scenarioLogPath", scenarioPath.resolve("log.txt").toString());
         log.info("START (UI) - {}", scenarioName);
 
-        ScenarioContextManager.get(); // ensure context is initialized
-
-
+        ScenarioContextManager.get(); // Ensure per-thread context is initialized
         PlaywrightFactory.initBrowser(browser);
         threadLocalPage.set(PlaywrightFactory.getPage());
     }
@@ -48,7 +48,7 @@ public class Hooks {
         log.info("START (API) - {}", scenarioName);
         log.info("API test — skipping browser setup.");
 
-        ScenarioContextManager.get(); // ensure context is initialized
+        ScenarioContextManager.get(); // Ensure per-thread context is initialized
     }
 
     @After
@@ -62,11 +62,9 @@ public class Hooks {
 
         if (page != null && path != null) {
             Path screenshotPath = path.resolve(result + ".png");
-            // Always saves a screenshot to disk
             byte[] screenshot = page.screenshot(new Page.ScreenshotOptions().setPath(screenshotPath));
             log.info("Screenshot saved: {}", screenshotPath);
 
-            // Screenshot to Allure only on failure
             if (scenario.isFailed()) {
                 Allure.addAttachment("Failure Screenshot", "image/png", new ByteArrayInputStream(screenshot), ".png");
             }
@@ -74,7 +72,7 @@ public class Hooks {
 
         log.info("END - {}", scenarioName);
 
-        // Cleanup
+        // Cleanup to avoid leaks in parallel threads
         PlaywrightFactory.close();
         threadLocalPage.remove();
         threadLocalScenarioPath.remove();
