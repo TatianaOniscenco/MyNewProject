@@ -110,7 +110,7 @@ public class APISteps {
         } else {
             log.error("[ASSERT][FAIL] Brands list is missing or empty.\nResponse: {}", response.asPrettyString());
             assertNotNull(brands, "'brands' key not found in response");
-            assertFalse(brands == null || brands.isEmpty(), "'brands' list is empty");
+            assertFalse(brands.isEmpty(), "'brands' list is empty");
         }
     }
 
