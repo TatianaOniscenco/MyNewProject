@@ -9,6 +9,7 @@ public class CartPage {
     // Constants
     private static final String CART_DESCRIPTION_LOCATOR = ".cart_description";
     private static final String CART_PRICE_LOCATOR = ".cart_price";
+    private static final String PRODUCT_PRICE_LOCATOR = "td.cart_price > p";
     private static final String CART_QUANTITY_LOCATOR = ".cart_quantity button";
     private static final String CART_TOTAL_LOCATOR = ".cart_total";
     private static final String CART_ROWS_LOCATOR = "tr[id^='product-']";
@@ -28,7 +29,7 @@ public class CartPage {
                 .isVisible();
     }
 
-    public boolean isPriceAndQuantityCorrect(String expectedPrice) {
+    public boolean isPriceCorrect(String expectedPrice) {
         Locator cartRows = page.locator(CART_ROWS_LOCATOR);
 
         for (int i = 0; i < cartRows.count(); i++) {
@@ -41,6 +42,13 @@ public class CartPage {
             }
         }
         return false;
+    }
+
+    /**
+     * Returns the product price displayed in the cart as a string (e.g., "Rs. 400").
+     */
+    public String getDisplayedPrice() {
+        return page.locator(PRODUCT_PRICE_LOCATOR).textContent().trim();
     }
 
     public boolean isTotalCorrect() {

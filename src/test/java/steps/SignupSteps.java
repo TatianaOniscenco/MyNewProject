@@ -75,4 +75,16 @@ public class SignupSteps {
             assertTrue(false, "'Enter Account Information' heading is not visible");
         }
     }
+
+    @Then("System displays the {string} message for existing user")
+    public void systemDisplaysTheMessageForExistingUser(String existingUserMessage) {
+        String actualMessage = signupPage.getExistingUserMessage();
+        if (actualMessage.equals(existingUserMessage)) {
+            log.info("[ASSERT] Existing user message matched: '{}'", actualMessage);
+        } else {
+            log.error("[ASSERT][FAIL] Existing user message mismatch — Expected: '{}', Actual: '{}'",
+                    existingUserMessage, actualMessage);
+            assertTrue(false, String.format("Expected message: '%s' but got: '%s'", existingUserMessage, actualMessage));
+        }
+    }
 }

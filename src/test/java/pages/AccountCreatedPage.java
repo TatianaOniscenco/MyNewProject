@@ -11,6 +11,7 @@ public class AccountCreatedPage {
     private static final String CONTINUE_BUTTON = "[data-qa='continue-button']";
     private static final String ACCOUNT_CREATED_HEADING = "h2:has-text('Account Created!')";
     private static final String ACCOUNT_CREATED_URL_FRAGMENT = "/account_created";
+    private static final String ACCOUNT_CREATED_MESSAGE = "[data-qa='account-created']";
 
     // Constructor
     public AccountCreatedPage(Page page) {
@@ -19,9 +20,7 @@ public class AccountCreatedPage {
 
     // Actions
     public void clickContinueButton() {
-        page.locator(CONTINUE_BUTTON)
-                .click(new Locator.ClickOptions().setTimeout(1000));
-        page.waitForLoadState(LoadState.DOMCONTENTLOADED);
+        page.locator(CONTINUE_BUTTON).click();
     }
 
     public boolean isAccountCreatedHeadingVisible() {
@@ -32,5 +31,9 @@ public class AccountCreatedPage {
 
     public boolean isAtAccountCreatedUrl() {
         return page.url().contains(ACCOUNT_CREATED_URL_FRAGMENT);
+    }
+
+    public String getAccountCreatedMessage() {
+        return page.locator(ACCOUNT_CREATED_MESSAGE).textContent().trim();
     }
 }
