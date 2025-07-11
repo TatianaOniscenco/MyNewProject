@@ -8,10 +8,10 @@ import ENUM.HttpMethod;
 
 public class ApiActions {
 
-    private static final String BASE_URL = ConfigReader.get("base.url");
+    private static final String BASE_URL = ConfigReader.getInstance().get("base.url");
 
     public static Response sendRequest(ApiEndpoint endpoint, HttpMethod method) {
-        String url = ConfigReader.get("base.url") + endpoint.getPath();
+        String url = ConfigReader.getInstance().get("base.url") + endpoint.getPath();
 
         switch (method) {
             case GET:
@@ -26,7 +26,7 @@ public class ApiActions {
             case POST:
                 return given()
                         .log().all()
-                        .contentType(ConfigReader.get("content.type"))
+                        .contentType(ConfigReader.getInstance().get("content.type"))
                         .when()
                         .post(url)
                         .then()
@@ -36,7 +36,7 @@ public class ApiActions {
             case PUT:
                 return given()
                         .log().all()
-                        .contentType(ConfigReader.get("content.type"))
+                        .contentType(ConfigReader.getInstance().get("content.type"))
                         .when()
                         .put(url)
                         .then()
@@ -46,7 +46,7 @@ public class ApiActions {
             case DELETE:
                 return given()
                         .log().all()
-                        .contentType(ConfigReader.get("content.type"))
+                        .contentType(ConfigReader.getInstance().get("content.type"))
                         .when()
                         .delete(url)
                         .then()
@@ -61,7 +61,7 @@ public class ApiActions {
     public static Response postToSearchProduct(String productName) {
         return given()
                 .log().all()
-                .contentType(ConfigReader.get("content.type"))
+                .contentType(ConfigReader.getInstance().get("content.type"))
                 .formParam("search_product", productName)
                 .when()
                 .post(BASE_URL + SEARCH_PRODUCT.getPath())
@@ -74,7 +74,7 @@ public class ApiActions {
     public static Response postToVerifyLogin(String email, String password) {
         return given()
                 .log().all()
-                .contentType(ConfigReader.get("content.type"))
+                .contentType(ConfigReader.getInstance().get("content.type"))
                 .formParam("email", email)
                 .formParam("password", password)
                 .when()
@@ -88,7 +88,7 @@ public class ApiActions {
     public static Response postToVerifyLogin(String password) {
         return given()
                 .log().all()
-                .contentType(ConfigReader.get("content.type"))
+                .contentType(ConfigReader.getInstance().get("content.type"))
                 .formParam("password", password)
                 .when()
                 .post(BASE_URL + VERIFY_LOGIN.getPath())

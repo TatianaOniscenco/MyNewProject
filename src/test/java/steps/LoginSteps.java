@@ -43,8 +43,8 @@ public class LoginSteps {
 
     @When("User inputs {string} and {string} credentials")
     public void inputCredentials(String emailKey, String passwordKey) {
-        String email = ConfigReader.get(emailKey.replace(" ", "."));
-        String password = ConfigReader.get(passwordKey.replace(" ", "."));
+        String email = ConfigReader.getInstance().get(emailKey.replace(" ", "."));
+        String password = ConfigReader.getInstance().get(passwordKey.replace(" ", "."));
         loginPage.enterLoginEmail(email);
         loginPage.enterLoginPassword(password);
         log.info("[ACTION] Inputting login credentials: email = {}, password = {}", email, password);

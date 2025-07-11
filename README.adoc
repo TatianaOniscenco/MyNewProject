@@ -1,0 +1,46 @@
+MyNewProject - Automated Testing Framework (ATF) to test https://automationexercise.com
+
+TECH STACK
+
+Java 24
+Playwright (for browser automation)
+Cucumber (for BDD style tests)
+Cucumber JUnit 5 Platform Engine (for running BDD tests)
+RestAssured (API testing)
+DataFaker (test data)
+SLF4J + Logback (logging)
+Maven (build tool)
+
+SETUP
+
+Install Java 24
+Install Maven
+Install Playwright browsers: mvn exec:java -e -D exec.mainClass=com.microsoft.playwright.CLI -D exec.args="install"
+
+CONFIGURATION
+
+config.properties##:##
+base.url=https://automationexercise.com
+headless=true
+default browser is Chromium if needs to be changed go to Hooks.java
+
+RUN TESTS
+
+Run specific test with tags:
+@Positive, @Negative - test result types
+@UI, @API - test layer
+@Only - for focused runs
+
+NOTES
+
+Dual layer testing (UI + API)
+Page Object Model for UI
+Parallel test execution
+Dynamic test tagging with @UI, @API, etc.
+Configurable setup (config.properties)
+Automatic logging and screenshots
+Randomized user data with DataFaker
+HTML reports via Cucumber or Allure
+
+AUTHOR
+Tatiana Oniscenco

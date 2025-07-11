@@ -1,6 +1,11 @@
 package context;
 
+/**
+ * Represents the user context shared across a scenario.
+ * Stores and provides access to user-related data like name, contact details, and credentials.
+ */
 public class UserContext {
+
     private String firstName;
     private String lastName;
     private String email;
@@ -11,6 +16,8 @@ public class UserContext {
     private String city;
     private String zipCode;
     private String phoneNumber;
+
+    // Getters and Setters for user details
 
     public String getFirstName() {
         return firstName;
@@ -28,6 +35,9 @@ public class UserContext {
         this.lastName = lastName;
     }
 
+    /**
+     * Returns the full name (first + last).
+     */
     public String getFullName() {
         return firstName + " " + lastName;
     }
@@ -96,6 +106,9 @@ public class UserContext {
         this.phoneNumber = phoneNumber;
     }
 
+    /**
+     * Returns a string representation of the UserContext object for logging/debugging.
+     */
     @Override
     public String toString() {
         return "UserContext{" +
@@ -112,3 +125,4 @@ public class UserContext {
                 '}';
     }
 }
+

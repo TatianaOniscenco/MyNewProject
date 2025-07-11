@@ -10,9 +10,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import utils.ScenarioPathBuilder;
+
 import java.io.ByteArrayInputStream;
 import java.nio.file.Path;
 
+/**
+ * Cucumber lifecycle hooks for UI and API tests.
+ * Handles setup and teardown of browser, scenario context, logging, and screenshots.
+ */
 public class Hooks {
 
     private final Logger log = LoggerFactory.getLogger(Hooks.class);
@@ -21,32 +26,22 @@ public class Hooks {
 
     @Before("@UI")
     public void beforeUIScenario(Scenario scenario) {
-        // Hardcoded browser to be used (CHROMIUM, FIREFOX, or WEBKIT)
-        BrowserName browser = BrowserName.CHROMIUM;
-
         String scenarioName = scenario.getName();
-        Path scenarioPath = ScenarioPathBuilder.getScenarioFolder("UI", scenarioName);
-        threadLocalScenarioPath.set(scenarioPath);
 
-        MDC.put("scenarioLogPath", scenarioPath.resolve("log.txt").toString());
         log.info("START (UI) - {}", scenarioName);
+        ScenarioContextManager.get(); // Initialize scenario context
 
-        ScenarioContextManager.get(); // Ensure per-thread context is initialized
-        PlaywrightFactory.initBrowser(browser);
+        PlaywrightFactory.initBrowser(BrowserName.CHROMIUM);
         threadLocalPage.set(PlaywrightFactory.getPage());
     }
 
     @Before("@API")
     public void beforeAPIScenario(Scenario scenario) {
         String scenarioName = scenario.getName();
-        Path scenarioPath = ScenarioPathBuilder.getScenarioFolder("API", scenarioName);
-        threadLocalScenarioPath.set(scenarioPath);
 
-        MDC.put("scenarioLogPath", scenarioPath.resolve("log.txt").toString());
         log.info("START (API) - {}", scenarioName);
         log.info("API test — skipping browser setup.");
-
-        ScenarioContextManager.get(); // Ensure per-thread context is initialized
+        ScenarioContextManager.get(); // Initialize scenario context
     }
 
     @After
@@ -70,11 +65,25 @@ public class Hooks {
 
         log.info("END - {}", scenarioName);
 
-        // Cleanup to avoid leaks in parallel threads
+        // Cleanup to avoid memory/thread leaks
         PlaywrightFactory.close();
         threadLocalPage.remove();
         threadLocalScenarioPath.remove();
         ScenarioContextManager.reset();
         MDC.clear();
+    }
+
+    /**
+     * Creates a log folder for the current scenario and configures MDC logging path.
+     *
+     * @param testType     UI or API
+     * @param scenarioName scenario name from Cucumber
+     * @return created path for this scenario
+     */
+    private Path setupScenarioLogPath(String testType, String scenarioName) {
+        Path scenarioPath = ScenarioPathBuilder.getScenarioFolder(testType, scenarioName);
+        threadLocalScenarioPath.set(scenarioPath);
+        MDC.put("scenarioLogPath", scenarioPath.resolve("log.txt").toString());
+        return scenarioPath;
     }
 }
