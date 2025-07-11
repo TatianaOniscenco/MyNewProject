@@ -55,10 +55,7 @@ credentials.json
 *.iws
 *.ipr
 out/
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
+
 
 # ========================
 # IDEs - Eclipse
@@ -106,8 +103,9 @@ ehthumbs.db
 *.swo
 
 # ========================
-# Playwright (Optional)
+# Custom project-specific ignores
 # ========================
+.allure/
 test-results/
 playwright-report/
 playwright/.cache/

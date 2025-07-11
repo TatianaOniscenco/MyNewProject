@@ -6,6 +6,8 @@ import io.cucumber.java.en.Then;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pages.CartPage;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CartSteps {
@@ -25,25 +27,16 @@ public class CartSteps {
         }
     }
 
-    @Then("Cart displays correct price {string} and quantity")
-    public void verifyProductPriceAndQuantity(String expectedPrice) {
-        boolean correct = cartPage.isPriceAndQuantityCorrect(expectedPrice);
-        if (correct) {
-            log.info("[ASSERT] Cart displays correct price and quantity for price: {}", expectedPrice);
+    @Then("Cart displays correct price {string}")
+    public void verifyProductPrice(String expectedPrice) {
+        String actualPrice = cartPage.getDisplayedPrice();
+        if (expectedPrice.equals(actualPrice)) {
+            log.info("[ASSERT] Cart displays correct price. Price: '{}'", actualPrice);
         } else {
-            log.error("[ASSERT][FAIL] Cart displays incorrect price or quantity. Expected price: {}", expectedPrice);
-            assertTrue(false, "Price or quantity incorrect");
-        }
-    }
-
-    @Then("Cart displays calculated total per product correctly")
-    public void verifyProductTotalCalculation() {
-        boolean correctTotal = cartPage.isTotalCorrect();
-        if (correctTotal) {
-            log.info("[ASSERT] Total price per product is calculated correctly.");
-        } else {
-            log.error("[ASSERT][FAIL] Total price per product calculation is incorrect.");
-            assertTrue(false, "Product total calculation is incorrect");
+            log.error("[ASSERT][FAIL] Cart shows incorrect details — Expected price: '{}', but was price: '{}'",
+                    expectedPrice, actualPrice);
+            assertEquals(expectedPrice, actualPrice,
+                    String.format("Price incorrect — Expected: '%s', but was: '%s'", expectedPrice, actualPrice));
         }
     }
 

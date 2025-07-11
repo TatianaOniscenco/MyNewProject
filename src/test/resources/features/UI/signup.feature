@@ -13,18 +13,18 @@ Background: User is on login page
     And User enters valid account information
     When User submits the signup form clicking on Create Account button
     Then User is redirected to Account Created page
-    And System displays the "Account Created!" message
+    And System displays the "Account Created!" message confirming account creation
     When User clicks Continue button
     Then User is redirected to homepage
     And System displays username up in the header
     When User clicks Delete Account button
-    Then System displays the "Account Deleted!" message
+    Then System displays the "Account Deleted!" message confirming delete
 
   @Negative
   Scenario: Register user with existing email
     And User inputs existing email "tatiana.oniscenco@endava.com" in New User Signup form
     When User clicks on Signup button
-    Then System displays the "Email Address already exist!" message
+    Then System displays the "Email Address already exist!" message for existing user
 
   @Positive
   Scenario: Successful user login after signup
@@ -34,7 +34,7 @@ Background: User is on login page
     And User enters valid account information
     When User submits the signup form clicking on Create Account button
     Then User is redirected to Account Created page
-    And System displays the "Account Created!" message
+    And System displays the "Account Created!" message confirming account creation
     When User clicks Continue button
     Then User is redirected to homepage
     And System displays username up in the header

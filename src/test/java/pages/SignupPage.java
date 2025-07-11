@@ -18,6 +18,7 @@ public class SignupPage {
     private static final String MOBILE_NUMBER_FIELD = "[data-qa='mobile_number']";
     private static final String CREATE_ACCOUNT_BUTTON = "[data-qa='create-account']";
     private static final String ENTER_ACCOUNT_INFO_HEADING = "text=Enter Account Information";
+    private static final String USER_EXISTS_MESSAGE = "text=Email Address already exist!";
 
     // Constructor
     public SignupPage(Page page) {
@@ -67,5 +68,9 @@ public class SignupPage {
 
     public boolean isEnterAccountInfoVisible() {
         return page.locator(ENTER_ACCOUNT_INFO_HEADING).isVisible();
+    }
+
+    public String getExistingUserMessage() {
+        return page.locator(USER_EXISTS_MESSAGE).textContent().trim();
     }
 }

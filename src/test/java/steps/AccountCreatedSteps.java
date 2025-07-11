@@ -39,4 +39,16 @@ public class AccountCreatedSteps {
         accountCreatedPage.clickContinueButton();
         log.info("[ACTION] Clicking Continue button on Account Created page");
     }
+
+    @Then("System displays the {string} message confirming account creation")
+    public void systemDisplaysTheMessageConfirmingAccountCreation(String accountCreatedMessage) {
+        String actualMessage = accountCreatedPage.getAccountCreatedMessage();
+        if (actualMessage.equals(accountCreatedMessage)) {
+            log.info("[ASSERT] Account creation message matched: '{}'", actualMessage);
+        } else {
+            log.error("[ASSERT][FAIL] Account creation message mismatch — Expected: '{}', Actual: '{}'",
+                    accountCreatedMessage, actualMessage);
+            assertTrue(false, String.format("Expected message: '%s' but got: '%s'", accountCreatedMessage, actualMessage));
+        }
+    }
 }

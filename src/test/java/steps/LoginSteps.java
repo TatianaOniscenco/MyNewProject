@@ -25,18 +25,18 @@ public class LoginSteps {
     @Then("System displays the {string} message")
     public void systemDisplaysTheMessage(String expectedMessage) {
         try {
-            String actualMessage = loginPage.getErrorMessage(expectedMessage);
+            String actualMessage = loginPage.getErrorMessage();
 
-            if (expectedMessage.equals(actualMessage)) {
+            if (actualMessage.equals(expectedMessage)) {
                 log.info("[ASSERT] Message matched: '{}'", actualMessage);
             } else {
                 log.error("[ASSERT][FAIL] Message mismatch — Expected: '{}', Actual: '{}'", expectedMessage, actualMessage);
                 assertEquals(expectedMessage, actualMessage,
-                        String.format("Expected message: '%s' but got: '%s'", expectedMessage, actualMessage));
-            }
+                        String.format("Login error message mismatch for invalid credentials. Expected: '%s', but was: '%s'", expectedMessage, actualMessage));
+                        }
 
         } catch (TimeoutError e) {
-            log.error("[ASSERT][ERROR] Timeout while waiting for message: '{}'", expectedMessage, e);
+            log.error("[ASSERT][ERROR] Timeout while waiting for error message element", e);
             throw e;
         }
     }
