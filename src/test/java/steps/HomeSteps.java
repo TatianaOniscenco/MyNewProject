@@ -46,7 +46,7 @@ public class HomeSteps {
 
     @Then("User is redirected to homepage")
     public void isRedirectedToHomepage() {
-        String expectedUrl = ConfigReader.get("base.url").replaceAll("/+$", "");
+        String expectedUrl = ConfigReader.getInstance().get("base.url").replaceAll("/+$", "");
         String actualUrl = homePage.getCurrentUrl().replaceAll("/+$", "");
 
         if (expectedUrl.equals(actualUrl)) {

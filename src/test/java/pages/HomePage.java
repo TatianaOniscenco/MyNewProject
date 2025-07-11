@@ -28,7 +28,7 @@ public class HomePage {
 
     // Actions
     public void openHomePage() {
-        String url = ConfigReader.get("base.url");
+        String url = ConfigReader.getInstance().get("base.url");
         page.navigate(url, new Page.NavigateOptions().setWaitUntil(WaitUntilState.DOMCONTENTLOADED));
         page.waitForSelector(SIGNUP_LOGIN_LINK);
     }

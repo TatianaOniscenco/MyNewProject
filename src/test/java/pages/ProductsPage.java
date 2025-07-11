@@ -13,7 +13,7 @@ public class ProductsPage {
     private static final String ADD_TO_CART_BUTTON = "xpath=//a[contains(@class,'add-to-cart')]";
     private static final String CONTINUE_SHOPPING_BUTTON = "button:has-text('Continue Shopping')";
     private static final String VIEW_CART_MODAL_BUTTON = "#cartModal a[href='/view_cart']";
-    private static final String PRODUCTS_URL = ConfigReader.get("base.url") + "/products";
+    private static final String PRODUCTS_URL =  "/products";
 
     // Constructor
     public ProductsPage(Page page) {
@@ -42,6 +42,7 @@ public class ProductsPage {
     }
 
     public void navigateToProductsPage() {
-        page.navigate(PRODUCTS_URL);
+        String productsPageURL = ConfigReader.getInstance().get("base.url") + PRODUCTS_URL;
+        page.navigate(productsPageURL);
     }
 }

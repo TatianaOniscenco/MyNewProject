@@ -15,7 +15,7 @@ public class PlaywrightFactory {
         playwright.set(Playwright.create());
 
         BrowserType.LaunchOptions launchOptions = new BrowserType.LaunchOptions()
-                .setHeadless(Boolean.parseBoolean(ConfigReader.get("headless")));
+                .setHeadless(Boolean.parseBoolean(ConfigReader.getInstance().get("headless")));
 
         Browser launchedBrowser = launchBrowser(browserName, launchOptions);
         browser.set(launchedBrowser);

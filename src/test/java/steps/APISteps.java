@@ -31,15 +31,15 @@ public class APISteps {
 
     @When("verify login with {string} and {string}")
     public void verifyLoginWithConfigValues(String emailKey, String passwordKey) {
-        String email = ConfigReader.get(emailKey.replace(" ", "."));
-        String password = ConfigReader.get(passwordKey.replace(" ", "."));
+        String email = ConfigReader.getInstance().get(emailKey.replace(" ", "."));
+        String password = ConfigReader.getInstance().get(passwordKey.replace(" ", "."));
         response = ApiActions.postToVerifyLogin(email, password);
         log.info("[API][POST] Verifying login with valid email and password from config: {}, {}", email, password);
     }
 
     @When("verify login with only {string}")
     public void verifyLoginWithOnlyPassword(String passwordKey) {
-        String password = ConfigReader.get(passwordKey.replace(" ", "."));
+        String password = ConfigReader.getInstance().get(passwordKey.replace(" ", "."));
         response = ApiActions.postToVerifyLogin(password);
         log.info("[API][POST] Verifying login with password only from config: {}", password);
     }
