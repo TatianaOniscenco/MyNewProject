@@ -5,14 +5,13 @@ import com.microsoft.playwright.Page;
 import config.ConfigReader;
 import context.ScenarioContextManager;
 import factory.PlaywrightFactory;
+import helpers.LogPathManager;
+import helpers.ScreenshotHelper;
 import io.cucumber.java.*;
-import io.qameta.allure.Allure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-import utils.ScenarioPathBuilder;
 
-import java.io.ByteArrayInputStream;
 import java.nio.file.Path;
 
 /**
@@ -33,7 +32,9 @@ public class Hooks {
         String browser = ConfigReader.getInstance().get("browser");
 
         // Set up the scenario log path and initialize the logging system
-        setupScenarioLogPath("UI", scenarioName);
+        Path path = LogPathManager.setup("UI", scenarioName);
+        threadLocalScenarioPath.set(path);
+
         log.info("START (UI) - {}", scenarioName);
         // Initialize the scenario context to store data specific to this scenario
         ScenarioContextManager.get();
@@ -47,7 +48,9 @@ public class Hooks {
     public void beforeAPIScenario(Scenario scenario) {
         String scenarioName = scenario.getName();
 
-        setupScenarioLogPath("API", scenarioName);
+        Path path = LogPathManager.setup("API", scenarioName);
+        threadLocalScenarioPath.set(path);
+
         log.info("START (API) - {}", scenarioName);
         ScenarioContextManager.get();
     }
@@ -58,21 +61,7 @@ public class Hooks {
         String result = scenario.isFailed() ? "FAILED" : "PASSED";
         log.info("{} - {}", result, scenarioName);
 
-        // Retrieve page and path from current thread for the screenshot and cleanup
-        Page page = threadLocalPage.get();
-        Path path = threadLocalScenarioPath.get();
-
-        // If it’s a UI test (page is not null), take a screenshot.
-        // Always save it to disk; attach to Allure only on failure.
-        if (page != null && path != null) {
-            Path screenshotPath = path.resolve(result + ".png");
-            byte[] screenshot = page.screenshot(new Page.ScreenshotOptions().setPath(screenshotPath));
-            log.info("Screenshot saved: {}", screenshotPath);
-
-            if (scenario.isFailed()) {
-                Allure.addAttachment("Failure Screenshot", "image/png", new ByteArrayInputStream(screenshot), ".png");
-            }
-        }
+        ScreenshotHelper.capture(threadLocalPage.get(), threadLocalScenarioPath.get(), scenario);
 
         log.info("END - {}", scenarioName);
 
@@ -82,14 +71,5 @@ public class Hooks {
         threadLocalScenarioPath.remove();
         ScenarioContextManager.reset();
         MDC.clear();
-    }
-
-    /**
-     * Sets up the logging system for the scenario using the path from ScenarioPathBuilder
-     */
-    private void setupScenarioLogPath(String testType, String scenarioName) {
-        Path scenarioPath = ScenarioPathBuilder.getScenarioFolder(testType, scenarioName);
-        threadLocalScenarioPath.set(scenarioPath);
-        MDC.put("scenarioLogPath", scenarioPath.resolve("log.txt").toString());
     }
 }

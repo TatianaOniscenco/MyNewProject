@@ -11,6 +11,4 @@ public enum BrowserName {
     BrowserName(String key) {
         this.key = key;
     }
-
-
 }
