@@ -2,6 +2,7 @@ package hooks;
 
 import ENUM.BrowserName;
 import com.microsoft.playwright.Page;
+import config.ConfigReader;
 import context.ScenarioContextManager;
 import factory.PlaywrightFactory;
 import io.cucumber.java.*;
@@ -20,18 +21,25 @@ import java.nio.file.Path;
  */
 public class Hooks {
 
+    // Logger for logging scenario start, end, and results, tagged with the class name
     private final Logger log = LoggerFactory.getLogger(Hooks.class);
+    // These fields store per-thread (per-scenario) instances of the Playwright Page and the scenario log folder Path
     private final ThreadLocal<Page> threadLocalPage = new ThreadLocal<>();
     private final ThreadLocal<Path> threadLocalScenarioPath = new ThreadLocal<>();
 
     @Before("@UI")
     public void beforeUIScenario(Scenario scenario) {
         String scenarioName = scenario.getName();
+        String browser = ConfigReader.getInstance().get("browser");
 
+        // Set up the scenario log path and initialize the logging system
         setupScenarioLogPath("UI", scenarioName);
         log.info("START (UI) - {}", scenarioName);
-        ScenarioContextManager.get(); // Initialize scenario context
-        PlaywrightFactory.initBrowser(BrowserName.CHROMIUM);
+        // Initialize the scenario context to store data specific to this scenario
+        ScenarioContextManager.get();
+        // Initialize Playwright and create a new browser page for this scenario
+        PlaywrightFactory.initBrowser(BrowserName.valueOf(browser.toUpperCase()));
+        // Store the Playwright Page in a ThreadLocal variable to ensure each scenario has its own instance
         threadLocalPage.set(PlaywrightFactory.getPage());
     }
 
@@ -41,8 +49,7 @@ public class Hooks {
 
         setupScenarioLogPath("API", scenarioName);
         log.info("START (API) - {}", scenarioName);
-        log.info("API test — skipping browser setup.");
-        ScenarioContextManager.get(); // Initialize scenario context
+        ScenarioContextManager.get();
     }
 
     @After
@@ -51,9 +58,12 @@ public class Hooks {
         String result = scenario.isFailed() ? "FAILED" : "PASSED";
         log.info("{} - {}", result, scenarioName);
 
+        // Retrieve page and path from current thread for the screenshot and cleanup
         Page page = threadLocalPage.get();
         Path path = threadLocalScenarioPath.get();
 
+        // If it’s a UI test (page is not null), take a screenshot.
+        // Always save it to disk; attach to Allure only on failure.
         if (page != null && path != null) {
             Path screenshotPath = path.resolve(result + ".png");
             byte[] screenshot = page.screenshot(new Page.ScreenshotOptions().setPath(screenshotPath));
@@ -75,10 +85,7 @@ public class Hooks {
     }
 
     /**
-     * Creates a log folder for the current scenario and configures MDC logging path.
-     *
-     * @param testType     UI or API
-     * @param scenarioName scenario name from Cucumber
+     * Sets up the logging system for the scenario using the path from ScenarioPathBuilder
      */
     private void setupScenarioLogPath(String testType, String scenarioName) {
         Path scenarioPath = ScenarioPathBuilder.getScenarioFolder(testType, scenarioName);

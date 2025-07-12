@@ -48,7 +48,7 @@ public class PlaywrightFactory {
         return switch (browserName) {
             case FIREFOX -> pw.firefox().launch(options);
             case WEBKIT  -> pw.webkit().launch(options);
-            case CHROMIUM -> pw.chromium().launch(options);
+            case CHROMIUM, CHROME -> pw.chromium().launch(options);
         };
     }
 

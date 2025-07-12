@@ -1,7 +1,8 @@
 package ENUM;
 
 public enum BrowserName {
-    CHROMIUM("CHROMIUM"),
+    CHROMIUM ("CHROMIUM"),
+    CHROME ("CHROMIUM"),
     FIREFOX("FIREFOX"),
     WEBKIT("WEBKIT");
 

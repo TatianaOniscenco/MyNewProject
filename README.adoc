@@ -22,7 +22,7 @@ CONFIGURATION
 config.properties##:##
 base.url=https://automationexercise.com
 headless=true
-default browser is Chromium if needs to be changed go to Hooks.java
+browser=CHROMIUM
 
 RUN TESTS
 
