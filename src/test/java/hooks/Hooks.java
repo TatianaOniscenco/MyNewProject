@@ -28,9 +28,9 @@ public class Hooks {
     public void beforeUIScenario(Scenario scenario) {
         String scenarioName = scenario.getName();
 
+        setupScenarioLogPath("UI", scenarioName);
         log.info("START (UI) - {}", scenarioName);
         ScenarioContextManager.get(); // Initialize scenario context
-
         PlaywrightFactory.initBrowser(BrowserName.CHROMIUM);
         threadLocalPage.set(PlaywrightFactory.getPage());
     }
@@ -39,6 +39,7 @@ public class Hooks {
     public void beforeAPIScenario(Scenario scenario) {
         String scenarioName = scenario.getName();
 
+        setupScenarioLogPath("API", scenarioName);
         log.info("START (API) - {}", scenarioName);
         log.info("API test — skipping browser setup.");
         ScenarioContextManager.get(); // Initialize scenario context
@@ -78,12 +79,10 @@ public class Hooks {
      *
      * @param testType     UI or API
      * @param scenarioName scenario name from Cucumber
-     * @return created path for this scenario
      */
-    private Path setupScenarioLogPath(String testType, String scenarioName) {
+    private void setupScenarioLogPath(String testType, String scenarioName) {
         Path scenarioPath = ScenarioPathBuilder.getScenarioFolder(testType, scenarioName);
         threadLocalScenarioPath.set(scenarioPath);
         MDC.put("scenarioLogPath", scenarioPath.resolve("log.txt").toString());
-        return scenarioPath;
     }
 }

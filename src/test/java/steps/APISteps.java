@@ -38,7 +38,7 @@ public class APISteps {
     }
 
     @When("verify login with only {string}")
-    public void verifyLoginWithOnlyPassword(String passwordKey) {
+    public void verifyLoginWithConfigValues(String passwordKey) {
         String password = ConfigReader.getInstance().get(passwordKey.replace(" ", "."));
         response = ApiActions.postToVerifyLogin(password);
         log.info("[API][POST] Verifying login with password only from config: {}", password);
