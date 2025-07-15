@@ -1,4 +1,5 @@
 package api.actions;
+
 import ENUM.ApiEndpoint;
 import config.ConfigReader;
 import io.restassured.response.Response;
@@ -10,6 +11,8 @@ public class ApiActions {
 
     private static final String BASE_URL = ConfigReader.getInstance().get("base.url");
 
+    // Sends a request to the specified API endpoint using the given HTTP method.
+    // Request body may be included (could be added later).
     public static Response sendRequest(ApiEndpoint endpoint, HttpMethod method) {
         String url = ConfigReader.getInstance().get("base.url") + endpoint.getPath();
 
@@ -85,6 +88,7 @@ public class ApiActions {
                 .response();
     }
 
+    // Overloaded method
     public static Response postToVerifyLogin(String password) {
         return given()
                 .log().all()

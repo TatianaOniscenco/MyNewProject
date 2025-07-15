@@ -41,6 +41,4 @@ public class ScenarioPathBuilder {
             throw new UncheckedIOException("Failed to create scenario directory: " + path, e);
         }
     }
-
-
 }

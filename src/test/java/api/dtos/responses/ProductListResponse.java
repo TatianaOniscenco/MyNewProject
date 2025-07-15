@@ -6,6 +6,7 @@ import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true) // Ignore unexpected fields at the top level
 
+// DTO (Data Transfer Object) class that helps deserialize JSON API responses into Java objects using Jackson.
 public class ProductListResponse {
 
     public List<Product> products;
