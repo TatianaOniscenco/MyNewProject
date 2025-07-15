@@ -76,7 +76,7 @@ public class HomeSteps {
         String actualText = homePage.getLoggedInText();
 
         if (actualText.contains(expectedText)) {
-            log.info("[ASSERT] Header contains new user's name: '{}'", expectedText);
+            log.info("[ASSERT] Header contains new user's name: '{}'", actualText);
         } else {
             log.error("[ASSERT][FAIL] Header does not contain new user's name. Expected: '{}', Found: '{}'", expectedText, actualText);
             assertTrue(actualText.contains(expectedText),
