@@ -12,7 +12,8 @@ public class LogPathManager {
     }
 
     /**
-     * Sets up log path for the given scenario and test type, and initializes MDC.
+     * Create a folder like: target/logs/15.07.2025/UI/14_50_22/Scenario_Name
+     * Configure MDC so Logback knows where to write logs for this scenario
      */
     public static Path setup(String testType, String scenarioName) {
         Path scenarioPath = ScenarioPathBuilder.getScenarioFolder(testType, scenarioName);

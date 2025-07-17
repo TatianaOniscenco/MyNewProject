@@ -20,28 +20,30 @@ import java.nio.file.Path;
  */
 public class Hooks {
 
-    // Logger for logging scenario start, end, and results, tagged with the class name
+    // Initialize the logger for this class
     private final Logger log = LoggerFactory.getLogger(Hooks.class);
-    // These fields store per-thread (per-scenario) instances of the Playwright Page and the scenario log folder Path
+    // Declare ThreadLocal variables to store per-scenario instances of Playwright Page and scenario log folder Path
     private final ThreadLocal<Page> threadLocalPage = new ThreadLocal<>();
     private final ThreadLocal<Path> threadLocalScenarioPath = new ThreadLocal<>();
 
     @Before("@UI")
     public void beforeUIScenario(Scenario scenario) {
+        // Retrieves the scenario name from the Cucumber Scenario object
         String scenarioName = scenario.getName();
+        // Reads the browser type (e.g. "chromium" or "firefox") from your config.properties
         String browser = ConfigReader.getInstance().get("browser");
 
-        // Set up the scenario log path and initialize the logging system
+        // Set up the scenario log path and initialize the logging system MDC
         Path path = LogPathManager.setup("UI", scenarioName);
         threadLocalScenarioPath.set(path);
 
-        log.info("START (UI) - {}", scenarioName);
         // Initialize the scenario context to store data specific to this scenario
         ScenarioContextManager.get();
         // Initialize Playwright and create a new browser page for this scenario
         PlaywrightFactory.initBrowser(BrowserName.valueOf(browser.toUpperCase()));
         // Store the Playwright Page in a ThreadLocal variable to ensure each scenario has its own instance
         threadLocalPage.set(PlaywrightFactory.getPage());
+        log.info("START (UI) - {}", scenarioName);
     }
 
     @Before("@API")
@@ -51,8 +53,8 @@ public class Hooks {
         Path path = LogPathManager.setup("API", scenarioName);
         threadLocalScenarioPath.set(path);
 
-        log.info("START (API) - {}", scenarioName);
         ScenarioContextManager.get();
+        log.info("START (API) - {}", scenarioName);
     }
 
     @After

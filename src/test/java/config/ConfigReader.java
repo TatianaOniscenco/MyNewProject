@@ -30,6 +30,8 @@ public class ConfigReader {
     }
 
     // Public method to get value by key
+    // Since the Properties object is private inside ConfigReader,
+    // you need a method like get() to safely expose individual config values
     public String get(String key) {
         return properties.getProperty(key);
     }

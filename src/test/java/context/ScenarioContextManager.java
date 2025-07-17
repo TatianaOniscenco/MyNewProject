@@ -6,7 +6,8 @@ package context;
 // This is a Singleton Utility Class + ThreadLocal context manager = Thread-local Singleton
 public class ScenarioContextManager {
 
-    private ScenarioContextManager() {} // prevent instantiation
+    private ScenarioContextManager() {
+    } // prevent instantiation
 
     private static final ThreadLocal<ScenarioContext> scenarioContext = ThreadLocal.withInitial(ScenarioContext::new);
 

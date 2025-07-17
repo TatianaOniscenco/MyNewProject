@@ -5,7 +5,7 @@ Background: User is on login page
   Given Homepage is loaded
   And User navigates to login page
 
-  @Positive @Only
+  @Positive
   Scenario: Successful user signup
     And User inputs new valid credentials in New User Signup form
     When User clicks on Signup button

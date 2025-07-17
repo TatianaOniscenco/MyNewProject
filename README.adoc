@@ -10,6 +10,7 @@ RestAssured (API testing)
 DataFaker (test data)
 SLF4J + Logback (logging)
 Maven (build tool)
+Allure (reporting)
 
 SETUP
 
@@ -40,7 +41,7 @@ Dynamic test tagging with @UI, @API, etc.
 Configurable setup (config.properties)
 Automatic logging and screenshots
 Randomized user data with DataFaker
-HTML reports via Cucumber or Allure
+HTML reports via Allure
 
 AUTHOR
 Tatiana Oniscenco

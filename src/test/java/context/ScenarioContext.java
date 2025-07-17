@@ -3,6 +3,10 @@ package context;
 import java.util.HashMap;
 import java.util.Map;
 
+// ScenarioContext is a custom context holder that acts like a map (HashMap<String, Object>).
+// It’s used to store and retrieve scenario-specific data across step definitions in a thread-safe and isolated manner.
+// Context Object Pattern – centralizes and encapsulates scenario-specific data.
+// Not a Singleton by itself, but its lifecycle is per thread (handled by ScenarioContextManager).
 public class ScenarioContext {
 
     // A map to store key-value pairs for test scenario data.
@@ -28,7 +32,7 @@ public class ScenarioContext {
      * @param <T> The expected return type.
      * @return The object associated with the key, cast to type T.
      */
-    @SuppressWarnings("unchecked") // Suppresses the unchecked cast warning.
+    @SuppressWarnings("unchecked") // Cast is unchecked, so you must know the correct type when retrieving
     public <T> T get(String key) {
         return (T) context.get(key);
     }
