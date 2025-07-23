@@ -18,11 +18,6 @@ public class APISteps {
     private final Logger log = LoggerFactory.getLogger(APISteps.class);
     private Response response;
 
-    @Given("System is up and running")
-    public void systemIsUpAndRunning() {
-        log.info("[INFO] Assuming system is up");
-    }
-
     @When("User searches for {string} via POST to SEARCH_PRODUCT endpoint")
     public void searchProduct(String productName) {
         response = ApiActions.postToSearchProduct(productName);

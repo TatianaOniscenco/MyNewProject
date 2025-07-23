@@ -1,9 +1,6 @@
 @API
 Feature: API: searchProduct endpoint
 
-  Background:
-    Given System is up and running
-
   @Positive @API5
   Scenario Outline: Post to search product
     When User searches for "<search_product>" via POST to SEARCH_PRODUCT endpoint

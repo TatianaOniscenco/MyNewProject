@@ -5,7 +5,7 @@ Background: User is on login page
   Given Homepage is loaded
   And User navigates to login page
 
-  @Negative
+  @Negative @Only
   Scenario: Login with incorrect email and password
     When User inputs "invalid email" and "invalid password" credentials
     And User submits the login form
@@ -16,5 +16,5 @@ Background: User is on login page
     When User inputs "valid email" and "valid password" credentials
     And User submits the login form
     And User is redirected to homepage
-    Then System displays "Logged in as Tatiana Oniscenco" up in the header
+    Then System displays "Logge in as Tatiana Oniscenco" up in the header
 

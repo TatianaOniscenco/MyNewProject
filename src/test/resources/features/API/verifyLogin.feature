@@ -4,9 +4,6 @@ Feature: API: verifyLogin endpoint
   # This feature file tests the verifyLogin endpoint for different scenarios
   # including positive and negative cases.
 
-  Background:
-    Given System is up and running
-
   @Positive @API7
   Scenario: Post to verify login with valid details
     When verify login with "valid email" and "valid password"
@@ -16,7 +13,7 @@ Feature: API: verifyLogin endpoint
   @Negative @API10
    Scenario: Post to verify login with invalid details
     When verify login with "invalid email" and "invalid password"
-    Then Response code is 200
+    Then Response code is 400
     And Response message is "User not found!"
 
   @Negative @API8

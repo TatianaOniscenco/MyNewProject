@@ -1,9 +1,6 @@
 @API
 Feature: API: productsList endpoint
 
-  Background:
-    Given System is up and running
-
   @Positive @API1
   Scenario: Get all products list
     When User sends "GET" request to "PRODUCTS_LIST" endpoint

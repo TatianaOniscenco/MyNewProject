@@ -1,9 +1,6 @@
 @API
 Feature: API: brandsList endpoint
 
-  Background:
-    Given System is up and running
-
   @Positive @API3
   Scenario: Get all brands list
     When User sends "GET" request to "BRANDS_LIST" endpoint

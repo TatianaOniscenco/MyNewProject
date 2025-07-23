@@ -16,7 +16,7 @@ import java.time.format.DateTimeFormatter;
  */
 public class ScenarioPathBuilder {
     private static final String ROOT_DIR = "target/logs";
-    private static final String DATE = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+    private static final String DATE = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
     private static final String RUN_TIMESTAMP = LocalTime.now().format(DateTimeFormatter.ofPattern("HH_mm_ss"));
 
     // Prevent instantiation of this utility class
