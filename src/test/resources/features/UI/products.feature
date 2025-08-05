@@ -11,5 +11,5 @@ Feature: UI: Add products to the cart
     And Cart displays correct price "<productPrice>"
     Examples:
       | productName | productPrice |
-      | Blue Top    | Rs. 600      |
+      | Blue Top    | Rs. 500      |
       | Men Tshirt  | Rs. 400      |

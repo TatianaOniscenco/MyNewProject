@@ -8,5 +8,5 @@ import org.junit.platform.suite.api.Suite;
 @IncludeEngines("cucumber")
 @SelectClasspathResource("features")
 public class CucumberTestRunner {
-    // Configuration in junit-platform.properties,ещ иу able to run parallel tests
+    // Configuration in junit-platform.properties,to be able to run parallel tests
 }
