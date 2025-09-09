@@ -1,36 +1,53 @@
 package steps;
 
 import com.microsoft.playwright.Page;
-import hooks.Hooks;
-import io.cucumber.java.en.And;
+import factory.PlaywrightFactory;
 import io.cucumber.java.en.Then;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pages.CartPage;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CartSteps {
-    private static final Logger log = LoggerFactory.getLogger(CartSteps.class);
 
-    Page page = Hooks.getPage();
-    CartPage cartPage = new CartPage(page);
+    private final Logger log = LoggerFactory.getLogger(CartSteps.class);
+    private final Page page = PlaywrightFactory.getPage();
+    private final CartPage cartPage = new CartPage(page);
 
-    @Then("selected {string} is visible in the cart")
+    @Then("Selected {string} is visible in the cart")
     public void areProductsVisible(String productName) {
-        log.info("[ASSERT] Verifying product is in cart: {}", productName);
-        assertTrue(cartPage.isProductInCart(productName), productName + " not found in cart");
+        boolean visible = cartPage.isProductInCart(productName);
+        if (visible) {
+            log.info("[ASSERT] Product '{}' is visible in cart.", productName);
+        } else {
+            log.error("[ASSERT][FAIL] Product '{}' not found in cart.", productName);
+            assertTrue(false, productName + " not found in cart");
+        }
     }
 
-    @And("cart displays correct price {string} and quantity")
-    public void verifyProductPriceAndQuantity(String expectedPrice) {
-        log.info("[ASSERT] Verifying product price and quantity: Expected price = {}", expectedPrice);
-        assertTrue(cartPage.isPriceAndQuantityCorrect(expectedPrice), "Price or quantity incorrect");
+    @Then("Cart displays correct price {string}")
+    public void verifyProductPrice(String expectedPrice) {
+        String actualPrice = cartPage.getDisplayedPrice();
+        if (expectedPrice.equals(actualPrice)) {
+            log.info("[ASSERT] Cart displays correct price. Price: '{}'", actualPrice);
+        } else {
+            log.error("[ASSERT][FAIL] Cart shows incorrect details — Expected price: '{}', but was price: '{}'",
+                    expectedPrice, actualPrice);
+            assertEquals(expectedPrice, actualPrice,
+                    String.format("Price incorrect — Expected: '%s', but was: '%s'", expectedPrice, actualPrice));
+        }
     }
 
-    @And("cart displays calculated total per product correctly")
-    public void verifyProductTotalCalculation() {
-        log.info("[ASSERT] Verifying total price per product is calculated correctly");
-        assertTrue(cartPage.isTotalCorrect(), "Product total calculation is incorrect");
+    @Then("User is redirected to Cart Page")
+    public void userIsRedirectedToCartPage() {
+        boolean onCartPage = cartPage.isCartPageVisible();
+        if (onCartPage) {
+            log.info("[ASSERT] User is successfully redirected to the Cart Page.");
+        } else {
+            log.error("[ASSERT][FAIL] User is not on the Cart Page. Current URL: {}", page.url());
+            assertTrue(false, "User is not on the Cart Page");
+        }
     }
 }

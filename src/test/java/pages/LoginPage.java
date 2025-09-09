@@ -5,46 +5,46 @@ import com.microsoft.playwright.Page;
 public class LoginPage {
     private final Page page;
 
-    private final String signupNameField = "[data-qa='signup-name']";
-    private final String signupEmailField = "[data-qa='signup-email']";
-    private final String signupButton = "[data-qa='signup-button']";
-    private final String loginEmailField = "[data-qa='login-email']";
-    private final String loginPasswordField = "[data-qa='login-password']";
-    private final String loginButton = "[data-qa='login-button']";
+    // Constants
+    private static final String SIGNUP_NAME_FIELD = "[data-qa='signup-name']";
+    private static final String SIGNUP_EMAIL_FIELD = "[data-qa='signup-email']";
+    private static final String SIGNUP_BUTTON = "[data-qa='signup-button']";
+    private static final String LOGIN_EMAIL_FIELD = "[data-qa='login-email']";
+    private static final String LOGIN_PASSWORD_FIELD = "[data-qa='login-password']";
+    private static final String LOGIN_BUTTON = "[data-qa='login-button']";
+    private static final String ERROR_LOCATOR = "form[action='/login'] p";
 
-
-    public LoginPage(Page page) {
+    // Constructor
+        public LoginPage(Page page) {
         this.page = page;
     }
 
+    // Actions
     public void enterLoginEmail(String email) {
-        page.locator(loginEmailField).fill(email);
+        page.locator(LOGIN_EMAIL_FIELD).fill(email);
     }
 
     public void enterLoginPassword(String password) {
-        page.locator(loginPasswordField).fill(password);
+        page.locator(LOGIN_PASSWORD_FIELD).fill(password);
     }
 
     public void clickLoginButton() {
-        page.locator(loginButton).click();
+        page.locator(LOGIN_BUTTON).click();
     }
 
     public void enterSignupName(String name) {
-        page.locator(signupNameField).fill(name);
+        page.locator(SIGNUP_NAME_FIELD).fill(name);
     }
 
     public void enterSignupEmail(String email) {
-        page.locator(signupEmailField).fill(email);
+        page.locator(SIGNUP_EMAIL_FIELD).fill(email);
     }
 
     public void clickSignupButton() {
-        page.locator(signupButton).click();
+        page.locator(SIGNUP_BUTTON).click();
     }
 
-    public boolean isErrorMessageVisible(String message) {
-        return page.locator("text=" + message).isVisible();
+    public String getErrorMessage() {
+        return page.locator(ERROR_LOCATOR).textContent().trim();
     }
-
-
-
 }

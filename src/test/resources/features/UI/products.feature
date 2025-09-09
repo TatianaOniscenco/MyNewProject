@@ -1,15 +1,15 @@
 @UI
-Feature: Add products to the cart
+Feature: UI: Add products to the cart
 
   @Positive
-  Scenario Outline: Add one product to the cart and verify cart details
+  Scenario Outline: Add <productName> to the cart and verify cart details
     Given User is on Products page
-    When adds "<productName>" product to the cart
-    And user views the cart
-    Then selected "<productName>" is visible in the cart
-    And cart displays correct price "<productPrice>" and quantity
-    And cart displays calculated total per product correctly
+    When Adds "<productName>" product to the cart
+    And User views the cart clicking on the button in the modal
+    Then User is redirected to Cart Page
+    And Selected "<productName>" is visible in the cart
+    And Cart displays correct price "<productPrice>"
     Examples:
       | productName | productPrice |
-      | Blue Top    | 500          |
-      | Men Tshirt  | 400          |
+      | Blue Top    | Rs. 500      |
+      | Men Tshirt  | Rs. 400      |

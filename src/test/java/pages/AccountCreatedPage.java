@@ -2,39 +2,37 @@ package pages;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
-import com.microsoft.playwright.PlaywrightException;
-import com.microsoft.playwright.options.LoadState;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AccountCreatedPage {
     private final Page page;
-    private final String continueButton = "[data-qa='continue-button']";
 
+    // Constants (selectors and url fragment)
+    private static final String CONTINUE_BUTTON = "[data-qa='continue-button']";
+    private static final String ACCOUNT_CREATED_HEADING = "h2:has-text('Account Created!')";
+    private static final String ACCOUNT_CREATED_URL_FRAGMENT = "/account_created";
+    private static final String ACCOUNT_CREATED_MESSAGE = "[data-qa='account-created']";
 
+    // Constructor
     public AccountCreatedPage(Page page) {
         this.page = page;
     }
 
+    // Actions
     public void clickContinueButton() {
-        page.locator(continueButton).click(new Locator.ClickOptions()
-                .setTimeout(1000));
-
-        page.waitForLoadState(LoadState.DOMCONTENTLOADED);
+        page.locator(CONTINUE_BUTTON).click();
     }
 
-    public void isVisible() {
-        Locator heading = page.locator("h2:has-text('Account Created!')");
+    public boolean isAccountCreatedHeadingVisible() {
+        Locator heading = page.locator(ACCOUNT_CREATED_HEADING);
+        heading.waitFor(new Locator.WaitForOptions().setTimeout(10000));
+        return heading.isVisible();
+    }
 
-        try {
-            heading.waitFor(new Locator.WaitForOptions().setTimeout(10000)); // wait for the heading
-            assertTrue(heading.isVisible(), "'Account Created!' heading is not visible.");
+    public boolean isAtAccountCreatedUrl() {
+        return page.url().contains(ACCOUNT_CREATED_URL_FRAGMENT);
+    }
 
-            // Optional URL check
-            assertTrue(page.url().contains("/account_created"), "Unexpected URL: " + page.url());
-
-        } catch (PlaywrightException e) {
-            throw new AssertionError("Failed to confirm Account Created page", e);
-        }
-
+    public String getAccountCreatedMessage() {
+        return page.locator(ACCOUNT_CREATED_MESSAGE).textContent().trim();
     }
 }

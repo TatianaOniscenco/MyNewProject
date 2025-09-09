@@ -1,120 +1,77 @@
 package hooks;
 
+import ENUM.BrowserName;
 import com.microsoft.playwright.Page;
+import config.ConfigReader;
+import context.ScenarioContextManager;
 import factory.PlaywrightFactory;
+import helpers.LogPathManager;
+import helpers.ScreenshotHelper;
 import io.cucumber.java.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-import utils.ScenarioPathBuilder;
 
 import java.nio.file.Path;
 
+/**
+ * Cucumber lifecycle hooks for UI and API tests.
+ * Handles setup and teardown of browser, scenario context, logging, and screenshots.
+ */
 public class Hooks {
-    private Path scenarioPath;
-    private String featureName;
-    private String scenarioName;
-    private String testType;
 
-    private static final ThreadLocal<Page> threadLocalPage = new ThreadLocal<>();
-    private static final ThreadLocal<String> threadLocalFirstName = new ThreadLocal<>();
-    private static final ThreadLocal<String> threadLocalLastName = new ThreadLocal<>();
-    private static final ThreadLocal<String> threadLocalEmail = new ThreadLocal<>();
-    private static final ThreadLocal<String> threadLocalPassword = new ThreadLocal<>();
-    private static final ThreadLocal<Path> threadLocalScenarioPath = new ThreadLocal<>();
+    // Initialize the logger for this class
+    private final Logger log = LoggerFactory.getLogger(Hooks.class);
+    // Declare ThreadLocal variables to store per-scenario instances of Playwright Page and scenario log folder Path
+    private final ThreadLocal<Page> threadLocalPage = new ThreadLocal<>();
+    private final ThreadLocal<Path> threadLocalScenarioPath = new ThreadLocal<>();
 
-    private static final Logger log = LoggerFactory.getLogger(Hooks.class);
+    @Before("@UI")
+    public void beforeUIScenario(Scenario scenario) {
+        // Retrieves the scenario name from the Cucumber Scenario object
+        String scenarioName = scenario.getName();
+        // Reads the browser type (e.g. "chromium" or "firefox") from your config.properties
+        String browser = ConfigReader.getInstance().get("browser");
 
-    // ------------------ User Info Getters/Setters ------------------
+        // Set up the scenario log path and initialize the logging system MDC
+        Path path = LogPathManager.setup("UI", scenarioName);
+        threadLocalScenarioPath.set(path);
 
-    public static void setFirstName(String firstName) {
-        threadLocalFirstName.set(firstName);
-    }
-
-    public static void setLastName(String lastName) {
-        threadLocalLastName.set(lastName);
-    }
-
-    public static String getFirstName() {
-        return threadLocalFirstName.get();
-    }
-
-    public static String getLastName() {
-        return threadLocalLastName.get();
-    }
-
-    public static String getFullName() {
-        return getFirstName() + " " + getLastName();
-    }
-
-    public static void setEmail(String email) {
-        threadLocalEmail.set(email);
-    }
-
-    public static void setPassword(String password) {
-        threadLocalPassword.set(password);
-    }
-
-    public static String getEmail() {
-        return threadLocalEmail.get();
-    }
-
-    public static String getPassword() {
-        return threadLocalPassword.get();
-    }
-
-    public static Page getPage() {
-        return threadLocalPage.get();
-    }
-
-    @Before
-    public void beforeScenario(Scenario scenario) {
-        this.featureName = scenario.getUri().toString().replaceAll(".*features/", "").replace(".feature", "");
-        this.scenarioName = scenario.getName();
-        this.testType = scenario.getSourceTagNames().contains("@API") ? "API" : "UI";
-
-        scenarioPath = ScenarioPathBuilder.getScenarioFolder(testType, scenarioName);
-        threadLocalScenarioPath.set(scenarioPath);
-
-        String fullPath = scenarioPath.resolve("log.txt").toString();
-        MDC.put("scenarioLogPath", fullPath);
-
-        log.info("START - {}", scenario.getName());
-
-        if (testType.equals("API")) {
-            log.info("API test — skipping browser setup.");
-            return;
-        }
-
-        // Initialize Playwright using the factory
-        PlaywrightFactory.initBrowser();
+        // Initialize the scenario context to store data specific to this scenario
+        ScenarioContextManager.get();
+        // Initialize Playwright and create a new browser page for this scenario
+        PlaywrightFactory.initBrowser(BrowserName.valueOf(browser.toUpperCase()));
+        // Store the Playwright Page in a ThreadLocal variable to ensure each scenario has its own instance
         threadLocalPage.set(PlaywrightFactory.getPage());
+        log.info("START (UI) - {}", scenarioName);
+    }
+
+    @Before("@API")
+    public void beforeAPIScenario(Scenario scenario) {
+        String scenarioName = scenario.getName();
+
+        Path path = LogPathManager.setup("API", scenarioName);
+        threadLocalScenarioPath.set(path);
+
+        ScenarioContextManager.get();
+        log.info("START (API) - {}", scenarioName);
     }
 
     @After
     public void afterScenario(Scenario scenario) {
+        String scenarioName = scenario.getName();
         String result = scenario.isFailed() ? "FAILED" : "PASSED";
-        log.info("{} - {}", result, scenario.getName());
+        log.info("{} - {}", result, scenarioName);
 
-        if (!testType.equals("API") && getPage() != null) {
-            Path screenshotPath = threadLocalScenarioPath.get().resolve(result + ".png");
-            getPage().screenshot(new Page.ScreenshotOptions().setPath(screenshotPath));
-            log.info("Screenshot saved: {}", screenshotPath);
-        }
+        ScreenshotHelper.capture(threadLocalPage.get(), threadLocalScenarioPath.get(), scenario);
 
-        log.info("END - {}", scenario.getName());
+        log.info("END - {}", scenarioName);
 
-        // Close browser resources
+        // Cleanup to avoid memory/thread leaks
         PlaywrightFactory.close();
-
-        // Cleanup thread-local data
         threadLocalPage.remove();
-        threadLocalFirstName.remove();
-        threadLocalLastName.remove();
-        threadLocalEmail.remove();
-        threadLocalPassword.remove();
         threadLocalScenarioPath.remove();
-        MDC.clear(); // Reset logging context
+        ScenarioContextManager.reset();
+        MDC.clear();
     }
 }
-

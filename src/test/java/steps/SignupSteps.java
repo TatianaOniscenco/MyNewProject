@@ -1,71 +1,90 @@
 package steps;
 
 import com.microsoft.playwright.Page;
-import hooks.Hooks;
+import context.ScenarioContext;
+import context.ScenarioContextManager;
+import context.UserContext;
+import ENUM.SignupCountry;
+import factory.PlaywrightFactory;
 import io.cucumber.java.en.*;
 import net.datafaker.Faker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pages.SignupPage;
 
-import java.util.List;
-import java.util.Random;
-
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SignupSteps {
-    private static final Logger log = LoggerFactory.getLogger(SignupSteps.class);
 
-    Page page = Hooks.getPage();
-    SignupPage signupPage = new SignupPage(page);
-    Faker faker = new Faker();
+    private final Logger log = LoggerFactory.getLogger(SignupSteps.class);
+    private final Page page = PlaywrightFactory.getPage();
+    private final SignupPage signupPage = new SignupPage(page);
+    private final ScenarioContext context = ScenarioContextManager.get();
+    private final Faker faker = new Faker();
 
     @When("User enters valid account information")
     public void enterValidUserInformation() {
-        String password = faker.internet().password();
-        List<String> countries = List.of("India", "United States", "Canada", "Australia", "Israel", "New Zealand", "Singapore");
-        String selectedCountry = countries.get(new Random().nextInt(countries.size()));
+        UserContext user = context.get("user");
 
-        String firstName = faker.name().firstName();
-        String lastName = faker.name().lastName();
+        // Generate remaining info
+        String password = faker.internet().password();
         String address = faker.address().streetAddress();
         String state = faker.address().state();
         String city = faker.address().city();
         String zipCode = faker.address().zipCode();
         String phoneNumber = faker.phoneNumber().phoneNumber();
+        SignupCountry country = SignupCountry.getRandom();
 
-        log.info("[DATA] First Name: {}", firstName);
-        log.info("[DATA] Last Name: {}", lastName);
-        log.info("[DATA] Address: {}", address);
-        log.info("[DATA] Country: {}", selectedCountry);
-        log.info("[DATA] State: {}", state);
-        log.info("[DATA] City: {}", city);
-        log.info("[DATA] Zip Code: {}", zipCode);
-        log.info("[DATA] Phone Number: {}", phoneNumber);
-        log.info("[DATA] Generated Password: {}", password);
-
+        // Fill form
         signupPage.enterPassword(password);
-        signupPage.enterFirstName(firstName);
-        signupPage.enterLastName(lastName);
+        signupPage.enterFirstName(user.getFirstName());
+        signupPage.enterLastName(user.getLastName());
         signupPage.enterAddress(address);
-        signupPage.selectCountry(selectedCountry);
+        signupPage.selectCountry(country.getLabel());
         signupPage.enterState(state);
         signupPage.enterCity(city);
         signupPage.enterZipCode(zipCode);
         signupPage.enterMobileNumber(phoneNumber);
 
-        Hooks.setPassword(password);
+        // Update context
+        user.setPassword(password);
+        user.setAddress(address);
+        user.setCountry(country.getLabel());
+        user.setState(state);
+        user.setCity(city);
+        user.setZipCode(zipCode);
+        user.setPhoneNumber(phoneNumber);
+        context.set("user", user);
+
+        log.info("[DATA] Final UserContext: {}", user);
     }
 
-    @And("User submits the signup form clicking on Create Account button")
+    @When("User submits the signup form clicking on Create Account button")
     public void submitSignupForm() {
-        log.info("[ACTION] Clicking 'Create Account' button");
         signupPage.clickCreateAccountButton();
+        log.info("[ACTION] Clicking 'Create Account' button");
     }
 
-    @And("user is redirected to Signup page")
+    @Then("user is redirected to Signup page")
     public void isRedirectedToSignupPage() {
-        log.info("[ASSERT] Checking visibility of 'Enter Account Information' section");
-        assertTrue(signupPage.isEnterAccountInfoVisible());
+        boolean isVisible = signupPage.isEnterAccountInfoVisible();
+        if (isVisible) {
+            log.info("[ASSERT] 'Enter Account Information' section is visible.");
+        } else {
+            log.error("[ASSERT][FAIL] 'Enter Account Information' heading is NOT visible.");
+            assertTrue(false, "'Enter Account Information' heading is not visible");
+        }
+    }
+
+    @Then("System displays the {string} message for existing user")
+    public void systemDisplaysTheMessageForExistingUser(String existingUserMessage) {
+        String actualMessage = signupPage.getExistingUserMessage();
+        if (actualMessage.equals(existingUserMessage)) {
+            log.info("[ASSERT] Existing user message matched: '{}'", actualMessage);
+        } else {
+            log.error("[ASSERT][FAIL] Existing user message mismatch — Expected: '{}', Actual: '{}'",
+                    existingUserMessage, actualMessage);
+            assertTrue(false, String.format("Expected message: '%s' but got: '%s'", existingUserMessage, actualMessage));
+        }
     }
 }
