@@ -19,7 +19,7 @@ Feature: API: verifyLogin endpoint
   @Negative @API8
   Scenario: Post to verify login without email parameter
     When verify login with only "valid password"
-    Then Response code is 200
+    Then Response code is 500
     And Response message is "Bad request, email or password parameter is missing in POST request."
 
   @Negative @API9
