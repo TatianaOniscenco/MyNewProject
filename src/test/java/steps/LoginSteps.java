@@ -7,7 +7,9 @@ import context.ScenarioContext;
 import context.ScenarioContextManager;
 import context.UserContext;
 import factory.PlaywrightFactory;
+import io.cucumber.java.Status;
 import io.cucumber.java.en.*;
+import io.qameta.allure.Allure;
 import net.datafaker.Faker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,8 +31,10 @@ public class LoginSteps {
 
             if (actualMessage.equals(expectedMessage)) {
                 log.info("[ASSERT] Message matched: '{}'", actualMessage);
+                Allure.step(String.format("[ASSERT] Message matched: '%s'", actualMessage));
             } else {
                 log.error("[ASSERT][FAIL] Message mismatch — Expected: '{}', Actual: '{}'", expectedMessage, actualMessage);
+                Allure.step(String.format("[ASSERT][FAIL] Message mismatch — Expected: '%s', Actual: '%s', Status: %s", expectedMessage, actualMessage, Status.FAILED));
                 assertEquals(expectedMessage, actualMessage,
                         String.format("Login error message mismatch for invalid credentials. Expected: '%s', but was: '%s'", expectedMessage, actualMessage));
                         }
