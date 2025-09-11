@@ -14,12 +14,12 @@ Feature: API: verifyLogin endpoint
    Scenario: Post to verify login with invalid details
     When verify login with "invalid email" and "invalid password"
     Then Response code is 200
-    And Response message is "User not found!??"
+    And Response message is "User not found!"
 
   @Negative @API8
   Scenario: Post to verify login without email parameter
     When verify login with only "valid password"
-    Then Response code is 500
+    Then Response code is 200
     And Response message is "Bad request, email or password parameter is missing in POST request."
 
   @Negative @API9

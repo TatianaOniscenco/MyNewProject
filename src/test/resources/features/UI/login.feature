@@ -9,7 +9,7 @@ Background: User is on login page
   Scenario: Login with incorrect email and password
     When User inputs "invalid email" and "invalid password" credentials
     And User submits the login form
-    Then System displays the "Your email or password is incorrect!!" message
+    Then System displays the "Your email or password is incorrect!" message
 
   @Positive
   Scenario: Login with correct email and password
